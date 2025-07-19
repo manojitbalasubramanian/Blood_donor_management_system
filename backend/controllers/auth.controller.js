@@ -32,6 +32,12 @@ export const signup =async(req,res)=>{
             username,
             password:hashedpassword,
             gender,
+            bloodgroup,
+            city,
+            phone,
+            age,
+            isdonor,  
+            address
         })
 
         if(newuser){
@@ -45,6 +51,12 @@ export const signup =async(req,res)=>{
                 fullname:newuser.fullname,
                 username:newuser.username,
                 password:newuser.password,
+                bloodgroup:newuser.bloodgroup,
+                city:newuser.city,
+                phone:newuser.phone,
+                age:newuser.age,
+                isdonor:newuser.isdonor,
+                address:newuser.address,
             })// insterd of .json ,json makes err
         }
         else{
