@@ -5,10 +5,14 @@ import generatetokenandsetcookie from "../utils/generatetokens.js";
 
 export const signup =async(req,res)=>{
     try {
-        const {fullname,username,password,confrimpassword,gender} = req.body;
+        const {fullname,username,password,confrimpassword,gender,bloodgroup,city,phone,age,isdonor,address} = req.body;
 
         // console.log(password)
         // console.log(confrimpassword)
+        if(!fullname || !username || !password || !confrimpassword){
+            return res.status(400).json({error:"please fill all the fields"})
+        }
+
         if(password !== confrimpassword){
            return res.status(400).json({error:"password doesn't match"})
         }
@@ -31,7 +35,14 @@ export const signup =async(req,res)=>{
             fullname,
             username,
             password:hashedpassword,
+            confrimpassword:hashedpassword,
             gender,
+            bloodgroup,
+            city,
+            phone,
+            age,
+            isdonor,  
+            address
         })
 
         if(newuser){
@@ -45,6 +56,13 @@ export const signup =async(req,res)=>{
                 fullname:newuser.fullname,
                 username:newuser.username,
                 password:newuser.password,
+                confrimpassword:newuser.confrimpassword,
+                bloodgroup:newuser.bloodgroup,
+                city:newuser.city,
+                phone:newuser.phone,
+                age:newuser.age,
+                isdonor:newuser.isdonor,
+                address:newuser.address,
             })// insterd of .json ,json makes err
         }
         else{

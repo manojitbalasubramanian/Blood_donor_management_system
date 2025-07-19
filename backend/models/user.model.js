@@ -18,38 +18,31 @@ const userSchema = new mongoose.Schema({
     gender:{
         type:String,
         require:true,
-        enum:["male","female"],
     },
     bloodgroup:{
         type:String,
         require:true,
-        default:"O+",
     },
     city:{
         type:String,
         require:true,
-        default:""
     },
     phone:{
         type:String,
         require:true,
         unique:true,
         minlength:10,
-        default:""
     },
     age:{
         type:Number,
         require:true,
-        default:0
     },
     isdonor:{
         type:Boolean,
         require:true,
-        default:false
     },
     address:{
         type:String,
-        default:""
     }
 },
 {timestamps:true}
