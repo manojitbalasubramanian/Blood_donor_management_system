@@ -9,12 +9,13 @@ import connecttomongodb from "./db/mdbConnection.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
 
+const PORT = process.env.PORT || 1000;
+const FRONTEND_PORT = process.env.FRONTEND_PORT || 1001;
 
 import cors from 'cors';
 app.use(cors({
-    origin: 'http://localhost:0000', // Replace with your frontend URL
+    origin: `http://localhost:${FRONTEND_PORT}`, // Replace with your frontend URL
   }));
 
 app.use(express.json());
