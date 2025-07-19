@@ -30,15 +30,9 @@ const userSchema = new mongoose.Schema({
     phone:{
         type:String,
         require:true,
-        unique:true,
-        minlength:10,
     },
     age:{
         type:Number,
-        require:true,
-    },
-    isdonor:{
-        type:Boolean,
         require:true,
     },
     address:{

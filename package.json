@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/Madhushree-30/Blood_donor_management_system.git",
-  "author": "manojitbalasubramanian <manojitbalasubramanianr@gmail.com>",
+  "author": "",
   "license": "MIT",
   "scripts": {
     "backend": "npm run start --prefix backend",
