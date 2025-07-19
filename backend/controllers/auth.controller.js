@@ -5,7 +5,7 @@ import generatetokenandsetcookie from "../utils/generatetokens.js";
 
 export const signup =async(req,res)=>{
     try {
-        const {fullname,username,password,confrimpassword,gender,bloodgroup,city,phone,age,isdonor,address} = req.body;
+        const {fullname,username,password,confrimpassword,gender,bloodgroup,city,phone,age,address} = req.body;
 
         // console.log(password)
         // console.log(confrimpassword)
@@ -41,7 +41,6 @@ export const signup =async(req,res)=>{
             city,
             phone,
             age,
-            isdonor,  
             address
         })
 
@@ -61,9 +60,8 @@ export const signup =async(req,res)=>{
                 city:newuser.city,
                 phone:newuser.phone,
                 age:newuser.age,
-                isdonor:newuser.isdonor,
                 address:newuser.address,
-            })// insterd of .json ,json makes err
+            })
         }
         else{
             res.status(400).json({error:"invalid user data"})
