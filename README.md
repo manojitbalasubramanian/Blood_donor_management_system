@@ -8,7 +8,7 @@ with help of ".env.example"
 
 
 step2:
-use "npm i" to install the dependency
+use "npm i" or "yarn" to install the dependency
 
 
 step2:
