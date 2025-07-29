@@ -1,0 +1,43 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap');
+
+.signup-container {
+  @apply min-h-screen flex flex-col items-center justify-start px-4 pt-16 text-white;
+  background: radial-gradient(circle at top left, #0c0c0c, #1a0000, #000);
+  font-family: 'Urbanist', sans-serif;
+}
+
+.signup-container h2 {
+  @apply text-5xl font-bold text-center mb-10 tracking-wide text-red-500;
+  letter-spacing: 3px;
+}
+
+.signup-container form {
+  @apply w-full max-w-xl bg-white/5 backdrop-blur-md border border-red-800 rounded-3xl p-10 shadow-[0_0_30px_#7f1d1d88] transition duration-500;
+}
+
+.signup-container label {
+  @apply block text-center text-red-400 text-sm font-semibold uppercase mb-2 tracking-widest;
+}
+
+.signup-container input,
+.signup-container select,
+.signup-container textarea {
+  @apply w-full px-4 py-3 mt-1 mb-4 rounded-xl bg-black/70 text-white border border-red-700 placeholder-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-300;
+}
+
+.signup-container textarea {
+  @apply resize-none;
+}
+
+.signup-container button {
+  @apply w-full mt-6 bg-gradient-to-br from-red-600 via-red-700 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-red-800 transition duration-300 uppercase tracking-wider;
+}
+
+.signup-container p {
+  @apply mt-6 text-sm text-center text-gray-400;
+}
+
+.signup-container a {
+  @apply text-red-400 hover:text-red-300 underline transition;
+}
