@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useSignup from "../hooks/useSignup";
+import './signup.css';
 
 const Signup = () => {
   const { signup, loading } = useSignup();
@@ -29,9 +30,9 @@ const Signup = () => {
 
   return (
     <div className="signup-container">
-      <h2>Signup</h2>
+      <h2>SIGNUP</h2>
       <form onSubmit={handleSubmit}>
-
+        <label>NAME</label>
         <input
           type="text"
           name="fullname"
@@ -42,6 +43,7 @@ const Signup = () => {
         />
         <br />
 
+       <label>USERNAME</label>
         <input
           type="text"
           name="username"
@@ -51,7 +53,8 @@ const Signup = () => {
           required
         />
         <br />
-
+        
+         <label>PASSWORD</label>
         <input
           type="password"
           name="password"
@@ -60,8 +63,9 @@ const Signup = () => {
           onChange={handleChange}
           required
         />
-        <br />
-
+        <br/>
+        
+         <label>CONFIRM PASSWORD</label>
         <input
           type="password"
           name="confrimpassword"
@@ -71,7 +75,8 @@ const Signup = () => {
           required
         />
         <br />
-
+        
+        <label>GENDER</label>
         <select
           name="gender"
           value={formData.gender}
@@ -83,7 +88,8 @@ const Signup = () => {
           <option value="female">Female</option>
         </select>
         <br />
-
+        
+        <label>BLOOD GROUP</label>
         <input
           type="text"
           name="bloodgroup"
@@ -93,7 +99,8 @@ const Signup = () => {
           required
         />
         <br />
-
+        
+        <label>CITY</label>
         <input
           type="text"
           name="city"
@@ -103,7 +110,8 @@ const Signup = () => {
           required
         />
         <br />
-
+        
+        <label>PHONE NUMBER</label>
         <input
           type="text"
           name="phone"
@@ -113,7 +121,8 @@ const Signup = () => {
           required
         />
         <br />
-
+        
+        <label>AGE</label>
         <input
           type="number"
           name="age"
@@ -123,7 +132,8 @@ const Signup = () => {
           required
         />
         <br />
-
+        
+        <label>ADDRESS</label>
         <textarea
           name="address"
           placeholder="Address"
@@ -131,7 +141,7 @@ const Signup = () => {
           onChange={handleChange}
         ></textarea>
         <br />
-
+        
         <button type="submit" disabled={loading}>
           Sign Up
         </button>
