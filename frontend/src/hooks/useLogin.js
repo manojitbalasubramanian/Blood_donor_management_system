@@ -11,19 +11,27 @@ const useLogin = () => {
         try {
             const res = await fetch("http://localhost:1234/auth/login",{
                 method:"POST",
-                headers:{"content-Type":"application/json"},
+                headers:{"Content-Type":"application/json"},
                 body: JSON.stringify({username,password})
             })
 
-            const data=await res.json()
+            const data = await res.json()
             if(data.error){
                 throw new Error(data.error)
             }
 
-            localStorage.setItem("user",JSON.stringify(data))
-            setAuthUser(data);
-            toast.success("Login successful")
-            return true; 
+            // Store the complete user data including token
+            const userData = {
+                _id: data._id,
+                username: data.username,
+                fullname: data.fullname,
+                token: data.token
+            };
+
+            localStorage.setItem("user", JSON.stringify(userData));
+            setAuthUser(userData);
+            toast.success("Login successful");
+            return userData; 
         } catch (error) {
             toast.error(error.message)
             return false;

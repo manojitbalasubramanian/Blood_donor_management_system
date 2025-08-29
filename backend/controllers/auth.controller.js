@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import generatetokenandsetcookie from "../utils/generatetokens.js";
+import jwt from "jsonwebtoken";
 
 
 export const signup =async(req,res)=>{
@@ -45,22 +46,22 @@ export const signup =async(req,res)=>{
         })
 
         if(newuser){
-
-            generatetokenandsetcookie(newuser._id,res);
-
             await newuser.save();
 
+            // Generate token for the new user
+            const token = jwt.sign(
+                { userId: newuser._id },
+                process.env.JWT_SECRET,
+                { expiresIn: "15d" }
+            );
+
             res.status(201).json({
-                _id:newuser._id,
-                fullname:newuser.fullname,
-                username:newuser.username,
-                password:newuser.password,
-                confrimpassword:newuser.confrimpassword,
-                bloodgroup:newuser.bloodgroup,
-                city:newuser.city,
-                phone:newuser.phone,
-                age:newuser.age,
-                address:newuser.address,
+                _id: newuser._id,
+                fullname: newuser.fullname,
+                username: newuser.username,
+                bloodgroup: newuser.bloodgroup,
+                city: newuser.city,
+                token: token
             })
         }
         else{
@@ -84,15 +85,24 @@ export const login =async(req,res)=>{
         }
         if(!ispasswordcorrect){
             return res.status(400).json({error:"correct username but password is wrong"});
-
         }
 
-        generatetokenandsetcookie(user._id,res);
+        // Generate token
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "15d" }
+        );
 
+        // Send the response with user data and token
         res.status(200).json({
-                _id:user._id,
-                fullname:user.fullname,
-                username:user.username,
+            _id: user._id,
+            fullname: user.fullname,
+            username: user.username,
+            bloodgroup: user.bloodgroup,
+            city: user.city,
+            token: token,
+            message: "Login successful"
         });
 
 

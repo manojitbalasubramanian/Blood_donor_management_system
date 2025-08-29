@@ -79,19 +79,19 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="px-10 md:px-20 py-12 bg-gradient-to-r from-red-600 to-pink-600 text-white">
+      <section className="px-10 md:px-20 py-12 bg-white text-gray-800">
         <div className="grid md:grid-cols-3 gap-8 text-center">
           <div>
-            <h3 className="text-4xl font-bold">500+</h3>
-            <p className="mt-2">Registered Donors</p>
+            <h3 className="text-4xl font-bold text-red-600">500+</h3>
+            <p className="mt-2 text-gray-600">Registered Donors</p>
           </div>
           <div>
-            <h3 className="text-4xl font-bold">1000+</h3>
-            <p className="mt-2">Lives Saved</p>
+            <h3 className="text-4xl font-bold text-pink-600">1000+</h3>
+            <p className="mt-2 text-gray-600">Lives Saved</p>
           </div>
           <div>
-            <h3 className="text-4xl font-bold">50+</h3>
-            <p className="mt-2">Cities Covered</p>
+            <h3 className="text-4xl font-bold text-red-500">50+</h3>
+            <p className="mt-2 text-gray-600">Cities Covered</p>
           </div>
         </div>
       </section>

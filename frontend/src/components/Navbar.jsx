@@ -31,6 +31,7 @@ function Navbar() {
       <div className="flex gap-6 text-lg">
         <Link to="/">Home</Link>
         <Link to="/donor">Donor Registration</Link>
+        <Link to="/blood-need">Recipient</Link>
 
         {!authUser && (
           <>

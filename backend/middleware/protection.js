@@ -1,17 +1,32 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
-const protection=async(req,res,next)=>{
+const protection = async (req, res, next) => {
     try {
-        const token =req.cookies.jwt;
-
-        if(!token){
-            return res.status(401).json({error:"unauthorized - no token provided"});
-        }
-        const decoded = jwt.verify(token,process.env.JWT_SECRET);
+        // Get token from Authorization header
+        const authHeader = req.headers.authorization;
         
-        if(!decoded){
-            return res.status(401).json({error:"unauthorized Invalid token"});
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({ error: "No token provided. Please login first" });
+        }
+
+        const token = authHeader.split(' ')[1]; // Bearer TOKEN
+        
+        if (!token) {
+            return res.status(401).json({ error: "Invalid token format. Please login again" });
+        }
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET);
+            console.log("Token verified successfully:", decoded); // Add this for debugging
+        } catch (error) {
+            console.log("Token verification failed:", error.message);
+            return res.status(401).json({ error: "Invalid token - please login again" });
+        }
+        
+        if (!decoded || !decoded.userId) {
+            return res.status(401).json({ error: "Invalid token payload - please login again" });
         }
 
         const user = await User.findById(decoded.userId).select("-password");
