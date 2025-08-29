@@ -3,10 +3,12 @@ import { Toaster } from "react-hot-toast";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
-import Donor from "./pages/Donor";   // ✅ Import Donor page
+import DonorCard from "./pages/DonorCard";
+import BloodNeed from "./pages/BloodNeed";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";  // ✅ Import Footer
+import Footer from "./components/Footer";
 import useAuthContext from "./context/useAuthContext";
+import DonorRegistration from "./pages/DonorRegistration";
 
 function App() {
   const { authUser } = useAuthContext();
@@ -28,7 +30,15 @@ function App() {
             path="/signup"
             element={authUser ? <Navigate to="/" /> : <Signup />}
           />
-          <Route path="/donor" element={<Donor />} />
+          <Route path="/donor" element={<DonorCard />} />
+          <Route 
+            path="/donor-registration"
+            element={authUser ? <DonorRegistration /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/blood-need"
+            element={authUser ? <BloodNeed /> : <Navigate to="/login" />}
+          />
         </Routes>
       </div>
 
