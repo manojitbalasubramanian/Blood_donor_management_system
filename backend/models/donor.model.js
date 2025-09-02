@@ -29,6 +29,44 @@ const donorSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    height: {
+        type: Number,
+        required: true,
+        min: 140,
+        max: 220,
+        validate: {
+            validator: function(value) {
+                if (!this.weight) return true; // Skip BMI validation if weight is not set
+                const heightInMeters = value / 100;
+                const bmi = this.weight / (heightInMeters * heightInMeters);
+                return bmi >= 18.5 && bmi <= 35;
+            },
+            message: props => {
+                const heightInMeters = props.value / 100;
+                const bmi = this.weight / (heightInMeters * heightInMeters);
+                return `BMI (${bmi.toFixed(1)}) is out of range. Must be between 18.5 and 35.`;
+            }
+        }
+    },
+    weight: {
+        type: Number,
+        required: true,
+        min: 45,
+        max: 150,
+        validate: {
+            validator: function(value) {
+                if (!this.height) return true; // Skip BMI validation if height is not set
+                const heightInMeters = this.height / 100;
+                const bmi = value / (heightInMeters * heightInMeters);
+                return bmi >= 18.5 && bmi <= 35;
+            },
+            message: props => {
+                const heightInMeters = this.height / 100;
+                const bmi = props.value / (heightInMeters * heightInMeters);
+                return `BMI (${bmi.toFixed(1)}) is out of range. Must be between 18.5 and 35.`;
+            }
+        }
+    },
     city: {
         type: String,
         required: true

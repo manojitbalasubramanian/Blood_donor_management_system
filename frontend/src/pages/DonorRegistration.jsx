@@ -12,6 +12,8 @@ const initialForm = {
   gender: "",
   bloodGroup: "",
   customBloodGroup: "",
+  height: "", // in cm
+  weight: "", // in kg
   city: "",
   state: "",
   country: "",
@@ -28,6 +30,8 @@ const initialErrors = {
   age: "",
   gender: "",
   bloodGroup: "",
+  height: "",
+  weight: "",
   city: "",
   country: "",
   address: "",
@@ -114,9 +118,18 @@ export default function DonorRegistration() {
         newErrors.bloodGroup = "Please specify your blood group";
         isValid = false;
       }
-    } else if (!["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"].includes(form.bloodGroup)) {
-      newErrors.bloodGroup = "Please select a valid blood group";
-      isValid = false;
+    } else {
+      const validGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
+      if (!validGroups.includes(form.bloodGroup)) {
+        const enteredGroup = form.bloodGroup.toUpperCase();
+        const baseGroups = ["A", "B", "O", "AB"];
+        if (baseGroups.includes(enteredGroup)) {
+          newErrors.bloodGroup = `Did you mean ${enteredGroup}+ or ${enteredGroup}-?`;
+        } else {
+          newErrors.bloodGroup = "Please enter a valid blood group (A+, B+, AB+, O+, A-, B-, AB-, O-)";
+        }
+        isValid = false;
+      }
     }
 
     // City validation
@@ -137,6 +150,45 @@ export default function DonorRegistration() {
       isValid = false;
     }
 
+    // Height validation
+    if (!form.height) {
+      newErrors.height = "Height is required";
+      isValid = false;
+    } else {
+      const height = parseFloat(form.height);
+      if (isNaN(height) || height < 140 || height > 220) {
+        newErrors.height = "Height must be between 140cm and 220cm";
+        isValid = false;
+      }
+    }
+
+    // Weight validation
+    if (!form.weight) {
+      newErrors.weight = "Weight is required";
+      isValid = false;
+    } else {
+      const weight = parseFloat(form.weight);
+      if (isNaN(weight) || weight < 45 || weight > 150) {
+        newErrors.weight = "Weight must be between 45kg and 150kg";
+        isValid = false;
+      }
+    }
+
+    // BMI Calculation and Validation
+    if (!newErrors.height && !newErrors.weight) {
+      const heightInMeters = parseFloat(form.height) / 100;
+      const weight = parseFloat(form.weight);
+      const bmi = weight / (heightInMeters * heightInMeters);
+
+      if (bmi < 18.5) {
+        newErrors.weight = `Your BMI (${bmi.toFixed(1)}) is too low for blood donation. Minimum BMI required is 18.5.`;
+        isValid = false;
+      } else if (bmi > 35) {
+        newErrors.weight = `Your BMI (${bmi.toFixed(1)}) is too high for blood donation. Maximum BMI allowed is 35.`;
+        isValid = false;
+      }
+    }
+
     // Last Donation Date validation
     if (form.lastDonation) {
       const donationDate = new Date(form.lastDonation);
@@ -155,16 +207,34 @@ export default function DonorRegistration() {
   useEffect(() => {
     const bloodGroup = searchParams.get("bloodGroup");
     if (bloodGroup) {
-      setForm((prev) => ({ ...prev, bloodGroup }));
+      // Decode the URL parameter to get the proper blood group with + sign
+      const decodedBloodGroup = decodeURIComponent(bloodGroup);
+      setForm((prev) => ({ ...prev, bloodGroup: decodedBloodGroup }));
     }
   }, [searchParams]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    
+    // Special handling for blood group input
+    if (name === "bloodGroup" && value) {
+      // If user enters just A, B, O, or AB, automatically append +
+      const baseGroups = ["A", "B", "O", "AB"];
+      const inputGroup = value.toUpperCase();
+      if (baseGroups.includes(inputGroup)) {
+        setForm((prev) => ({
+          ...prev,
+          [name]: inputGroup + "+"
+        }));
+        return;
+      }
+    }
+    
     setForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    
     // Clear error when user types
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
@@ -206,6 +276,8 @@ export default function DonorRegistration() {
       age: parseInt(form.age),
       gender: form.gender,
       bloodGroup: form.bloodGroup === "other" ? form.customBloodGroup : form.bloodGroup,
+      height: parseFloat(form.height),
+      weight: parseFloat(form.weight),
       lastDonation: form.lastDonation || null,
       availability: isAvailable,
       city: form.city,
@@ -249,7 +321,7 @@ export default function DonorRegistration() {
                 className={`${inputBase} ${errors.fullName ? 'border-red-500 ring-1 ring-red-500' : ''}`}
                 type="text"
                 name="fullName"
-                placeholder="e.g., Priya Narayanan"
+                placeholder=""
                 value={form.fullName}
                 onChange={handleChange}
                 required
@@ -268,7 +340,7 @@ export default function DonorRegistration() {
                 className={`${inputBase} ${errors.email ? 'border-red-500 ring-1 ring-red-500' : ''}`}
                 type="email"
                 name="email"
-                placeholder="you@example.com"
+                placeholder=""
                 value={form.email}
                 onChange={handleChange}
                 required
@@ -287,7 +359,7 @@ export default function DonorRegistration() {
                 className={`${inputBase} ${errors.phone ? 'border-red-500 ring-1 ring-red-500' : ''}`}
                 type="tel"
                 name="phone"
-                placeholder="+91 98765 43210"
+                placeholder=""
                 value={form.phone}
                 onChange={handleChange}
                 required
@@ -340,6 +412,48 @@ export default function DonorRegistration() {
               </div>
             </div>
 
+            {/* Height & Weight */}
+            <div className="grid grid-cols-2 gap-5 mt-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Height (cm)
+                </label>
+                <input
+                  className={`${inputBase} ${errors.height ? 'border-red-500 ring-1 ring-red-500' : ''}`}
+                  type="number"
+                  name="height"
+                  placeholder="Height in centimeters"
+                  value={form.height}
+                  onChange={handleChange}
+                  min="140"
+                  max="220"
+                  required
+                />
+                {errors.height && (
+                  <p className="mt-1 text-sm text-red-500">{errors.height}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Weight (kg)
+                </label>
+                <input
+                  className={`${inputBase} ${errors.weight ? 'border-red-500 ring-1 ring-red-500' : ''}`}
+                  type="number"
+                  name="weight"
+                  placeholder="Weight in kilograms"
+                  value={form.weight}
+                  onChange={handleChange}
+                  min="45"
+                  max="150"
+                  required
+                />
+                {errors.weight && (
+                  <p className="mt-1 text-sm text-red-500">{errors.weight}</p>
+                )}
+              </div>
+            </div>
+
             {/* Blood Group */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -363,14 +477,7 @@ export default function DonorRegistration() {
                     required
                   >
                     <option value="">Select Blood Group</option>
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
+                    
                     <option value="other">Other Blood Group</option>
                   </select>
                 )}

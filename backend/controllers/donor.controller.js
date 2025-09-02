@@ -4,7 +4,7 @@ import Donor from "../models/donor.model.js";
 export const registerDonor = async (req, res) => {
     try {
         const { 
-            fullName, email, phone, age, gender, bloodGroup, 
+            fullName, email, phone, age, gender, bloodGroup, height, weight,
             city, state, country, address
         } = req.body;
 
@@ -17,6 +17,17 @@ export const registerDonor = async (req, res) => {
             return res.status(400).json({ error: "A donor with this email already exists" });
         }
 
+        // Calculate BMI
+        const heightInMeters = height / 100;
+        const bmi = weight / (heightInMeters * heightInMeters);
+
+        // Validate BMI
+        if (bmi < 18.5 || bmi > 35) {
+            return res.status(400).json({ 
+                error: `BMI (${bmi.toFixed(1)}) is out of range. Must be between 18.5 and 35.`
+            });
+        }
+
         // Create new donor
         const newDonor = new Donor({
             fullName,
@@ -25,6 +36,8 @@ export const registerDonor = async (req, res) => {
             age,
             gender,
             bloodGroup,
+            height,
+            weight,
             city,
             state,
             country,

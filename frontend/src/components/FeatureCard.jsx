@@ -3,7 +3,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-const FeatureCard = ({ icon, title, description, color }) => {
+const FeatureCard = ({ icon, title, description, color, bloodGroup }) => {
   const colorMap = {
     red: "bg-red-500",
     pink: "bg-pink-500",
@@ -13,7 +13,7 @@ const FeatureCard = ({ icon, title, description, color }) => {
 
   return (
     <div className="w-full sm:w-1/2 md:w-1/3 p-4">
-      <Link to={`/donor-registration?bloodGroup=${title}`} className="block">
+      <Link to={`/donor-registration?bloodGroup=${encodeURIComponent(bloodGroup || title)}`} className="block">
         <div className="bg-white rounded-2xl shadow-lg p-6 text-center hover:scale-105 transition-transform duration-300 cursor-pointer">
           {icon && (
             <div
