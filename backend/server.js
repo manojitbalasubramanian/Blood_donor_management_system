@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import donorRoutes from "./routes/donor.routes.js";
 
+import adminRoutes from "./routes/admin.routes.js";
+
 import connecttomongodb from "./db/mdbConnection.js";
 
 dotenv.config();
@@ -31,6 +33,7 @@ app.use(cookieParser());
 
 app.use("/auth", authRoutes);
 app.use("/api/donors", donorRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.listen(PORT,()=>{
     connecttomongodb()

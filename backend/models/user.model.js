@@ -38,6 +38,17 @@ const userSchema = new mongoose.Schema({
     address:{
         type:String,
     }
+    ,
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    }
+    ,
+    admin: {
+        type: Boolean,
+        default: false
+    }
 },
 {timestamps:true}
 );

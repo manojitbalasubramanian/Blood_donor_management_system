@@ -1,3 +1,57 @@
+// Admin create donor
+export const createDonorByAdmin = async (req, res) => {
+    try {
+        if (!req.user.admin) {
+            return res.status(403).json({ error: "Only admins can create donors this way" });
+        }
+        const donorData = req.body;
+        // userId can be set from body or null
+        const newDonor = new Donor(donorData);
+        await newDonor.save();
+        res.status(201).json({ message: "Donor created by admin", donor: newDonor });
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+// Update donor info (admin or owner)
+export const updateDonor = async (req, res) => {
+    try {
+        const { donorId } = req.params;
+        const donor = await Donor.findById(donorId);
+        if (!donor) {
+            return res.status(404).json({ error: "Donor not found" });
+        }
+        // Only admin or owner can edit
+        if (!req.user.admin && donor.userId.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ error: "Not authorized to edit this donor" });
+        }
+        Object.assign(donor, req.body);
+        await donor.save();
+        res.status(200).json({ message: "Donor updated", donor });
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+// Delete donor (admin or owner)
+export const deleteDonor = async (req, res) => {
+    try {
+        const { donorId } = req.params;
+        const donor = await Donor.findById(donorId);
+        if (!donor) {
+            return res.status(404).json({ error: "Donor not found" });
+        }
+        // Only admin or owner can delete
+        if (!req.user.admin && donor.userId.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ error: "Not authorized to delete this donor" });
+        }
+        await donor.deleteOne();
+        res.status(200).json({ message: "Donor deleted" });
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
 import Donor from "../models/donor.model.js";
 
 // Register a new donor

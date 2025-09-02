@@ -6,11 +6,11 @@ import jwt from "jsonwebtoken";
 
 export const signup =async(req,res)=>{
     try {
-        const {fullname,username,password,confrimpassword,gender,bloodgroup,city,phone,age,address} = req.body;
+        const {fullname,username,email,password,confrimpassword,gender,bloodgroup,city,phone,age,address} = req.body;
 
         // console.log(password)
         // console.log(confrimpassword)
-        if(!fullname || !username || !password || !confrimpassword){
+        if(!fullname || !username || !email || !password || !confrimpassword){
             return res.status(400).json({error:"please fill all the fields"})
         }
 
@@ -22,10 +22,14 @@ export const signup =async(req,res)=>{
             return res.status(400).json({error:"password length must contain 6"})
         }
 
-        const user = await User.findOne({username});//findone in to find the user in mongodb
-
+        const user = await User.findOne({$or: [{username}, {email}]});
         if(user){
-            return res.status(400).json({error:"username already exist"})
+            if(user.username === username) {
+                return res.status(400).json({error:"username already exist"})
+            }
+            if(user.email === email) {
+                return res.status(400).json({error:"email already exist"})
+            }
         }
 
         // HASH PASS HERE
@@ -35,6 +39,7 @@ export const signup =async(req,res)=>{
         const newuser = new User({
             fullname,
             username,
+            email,
             password:hashedpassword,
             confrimpassword:hashedpassword,
             gender,
@@ -59,8 +64,10 @@ export const signup =async(req,res)=>{
                 _id: newuser._id,
                 fullname: newuser.fullname,
                 username: newuser.username,
+                email: newuser.email,
                 bloodgroup: newuser.bloodgroup,
                 city: newuser.city,
+                admin: newuser.admin,
                 token: token
             })
         }
@@ -76,15 +83,20 @@ export const signup =async(req,res)=>{
 
 export const login =async(req,res)=>{
     try {
-        const {username,password} = req.body;
-        const user = await User.findOne({username});
-        const ispasswordcorrect = await bcrypt.compare(password,user?.password || ""); // "user?.password" is the user entered password , ? is to check if it is null
-                                                                                        // OR "" in the above line is f
-        if(!user){
-            return res.status(400).json({error:"username not found please signup"});
+        const { identifier, password } = req.body;
+        // Find user by username or email
+        const user = await User.findOne({
+            $or: [
+                { username: identifier },
+                { email: identifier }
+            ]
+        });
+        const ispasswordcorrect = await bcrypt.compare(password, user?.password || "");
+        if (!user) {
+            return res.status(400).json({ error: "User not found. Please signup." });
         }
-        if(!ispasswordcorrect){
-            return res.status(400).json({error:"correct username but password is wrong"});
+        if (!ispasswordcorrect) {
+            return res.status(400).json({ error: "Correct identifier but password is wrong" });
         }
 
         // Generate token
@@ -99,16 +111,16 @@ export const login =async(req,res)=>{
             _id: user._id,
             fullname: user.fullname,
             username: user.username,
+            email: user.email,
             bloodgroup: user.bloodgroup,
             city: user.city,
+            admin: user.admin,
             token: token,
             message: "Login successful"
         });
-
-
     } catch (error) {
         console.log("error in login controller", error.message)
-        res.status(500).json({error:"internal server error"})
+        res.status(500).json({ error: "internal server error" })
     }
 };
 
