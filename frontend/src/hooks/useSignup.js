@@ -7,17 +7,17 @@ const useSignup = () => {
 
 	const {AuthUser,setAuthUser}= useAuthContext();
 
-	const signup = async ({fullname,username,password,confrimpassword,gender,bloodgroup,city,phone,age,address}) => {
+	const signup = async ({fullname,username,email,password,confrimpassword,gender,bloodgroup,city,phone,age,address}) => {
 
 		setLoading(true);
-		try {
-			const res = await fetch("http://localhost:1234/auth/signup", {
-				method: "POST",
-				headers: {
-					'Content-Type': 'application/json',
-				  },
-				body: JSON.stringify({fullname,username,password,confrimpassword,gender,bloodgroup,city,phone,age,address}),
-			});
+				try {
+						const res = await fetch("http://localhost:1234/auth/signup", {
+								method: "POST",
+								headers: {
+										'Content-Type': 'application/json',
+									},
+								body: JSON.stringify({fullname,username,email,password,confrimpassword,gender,bloodgroup,city,phone,age,address}),
+						});
 
 			const data = await res.json();
 			if (data.error) {

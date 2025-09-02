@@ -40,6 +40,9 @@ function Navbar() {
           </>
         )}
 
+        {authUser && authUser.admin && (
+          <Link to="/admin">Admin</Link>
+        )}
         {authUser && (
           <button
             onClick={handleLogout}

@@ -6,13 +6,13 @@ const useLogin = () => {
     const [loading,setLoading]=useState(false)
     const {setAuthUser}=useAuthContext()
 
-    const login=async(username,password)=>{
+    const login=async(identifier,password)=>{
         setLoading(true)
         try {
             const res = await fetch("http://localhost:1234/auth/login",{
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
-                body: JSON.stringify({username,password})
+                body: JSON.stringify({identifier,password})
             })
 
             const data = await res.json()
@@ -20,14 +20,17 @@ const useLogin = () => {
                 throw new Error(data.error)
             }
 
-            // Store the complete user data including token
+            // Store the complete user data including token and admin status
             const userData = {
                 _id: data._id,
                 username: data.username,
                 fullname: data.fullname,
-                token: data.token
+                email: data.email,
+                token: data.token,
+                admin: data.admin
             };
 
+            console.log('Admin status after login:', userData.admin);
             localStorage.setItem("user", JSON.stringify(userData));
             setAuthUser(userData);
             toast.success("Login successful");

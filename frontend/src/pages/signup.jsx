@@ -7,19 +7,26 @@ const Signup = () => {
   const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
-    fullname: "",
-    username: "",
-    password: "",
-    confrimpassword: "",
-    gender: "",
-    bloodgroup: "",
-    city: "",
-    phone: "",
-    age: "",
-    address: "",
+  fullname: "",
+  username: "",
+  email: "",
+  password: "",
+  confrimpassword: "",
+  gender: "",
+  bloodgroup: "",
+  city: "",
+  phone: "",
+  age: "",
+  address: "",
   });
 
   const validateForm = () => {
+    // Validate email
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Invalid email format";
+    }
     const newErrors = {};
     
     // Validate fullname
@@ -133,6 +140,23 @@ const Signup = () => {
           />
           {errors.fullname && (
             <span className="text-red-500 text-xs mt-1">{errors.fullname}</span>
+          )}
+
+          {/* Email */}
+          <label className="mt-4 mb-1 text-sm text-gray-300">Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className={`p-3 rounded-xl bg-gray-800 text-sm text-white placeholder-gray-500 outline-none focus:bg-gray-700 focus:ring-2 ${
+              errors.email ? "ring-2 ring-red-500" : "focus:ring-red-500"
+            }`}
+          />
+          {errors.email && (
+            <span className="text-red-500 text-xs mt-1">{errors.email}</span>
           )}
 
           {/* Username */}
