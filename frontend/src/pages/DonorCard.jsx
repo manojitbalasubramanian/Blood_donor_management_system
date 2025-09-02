@@ -3,15 +3,15 @@ import { faTint, faHeart } from "@fortawesome/free-solid-svg-icons";
 import FeatureCard from "../components/FeatureCard";
 
 const bloodGroups = [
-  { group: "A+", color: "red" },
-  { group: "A-", color: "pink" },
-  { group: "B+", color: "red" },
-  { group: "B-", color: "pink" },
-  { group: "O+", color: "red" },
-  { group: "O-", color: "pink" },
-  { group: "AB+", color: "red" },
-  { group: "AB-", color: "pink" },
-  { group: "Others", color: "gray", icon: faHeart },
+  { group: "A+", color: "red", urlParam: "A+" },
+  { group: "A-", color: "pink", urlParam: "A-" },
+  { group: "B+", color: "red", urlParam: "B+" },
+  { group: "B-", color: "pink", urlParam: "B-" },
+  { group: "O+", color: "red", urlParam: "O+" },
+  { group: "O-", color: "pink", urlParam: "O-" },
+  { group: "AB+", color: "red", urlParam: "AB+" },
+  { group: "AB-", color: "pink", urlParam: "AB-" },
+  { group: "Others", color: "gray", icon: faHeart, urlParam: "Others" },
 ];
 
 const DonorCard = () => {
@@ -26,6 +26,7 @@ const DonorCard = () => {
             key={index}
             icon={blood.icon || faTint}
             title={blood.group}
+            bloodGroup={blood.group}  // Pass the full blood group including +/-
             description={
               blood.group === "Others"
                 ? "Register as a donor even if your group is rare or not listed."
