@@ -4,7 +4,10 @@ import {
     getAllDonors, 
     getDonorsByBloodGroup,
     updateDonorAvailability,
-    getDonorProfile
+    getDonorProfile,
+    createDonorByAdmin,
+    updateDonor,
+    deleteDonor
 } from "../controllers/donor.controller.js";
 import protection from "../middleware/protection.js";
 
@@ -16,6 +19,9 @@ router.use(protection);
 // Register as a donor
 router.post("/register", registerDonor);
 
+// Admin create donor
+router.post("/create", createDonorByAdmin);
+
 // Get all donors
 router.get("/all", getAllDonors);
 
@@ -24,6 +30,12 @@ router.get("/bloodgroup/:bloodGroup", getDonorsByBloodGroup);
 
 // Update donor availability
 router.patch("/availability/:donorId", updateDonorAvailability);
+
+// Update donor info (admin or owner)
+router.put("/:donorId", updateDonor);
+
+// Delete donor (admin or owner)
+router.delete("/:donorId", deleteDonor);
 
 // Get donor's own profile
 router.get("/profile", getDonorProfile);

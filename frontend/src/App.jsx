@@ -9,6 +9,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import useAuthContext from "./context/useAuthContext";
 import DonorRegistration from "./pages/DonorRegistration";
+import AdminPage from "./pages/admin/AdminPage";
+import DonorRecord from "./pages/admin/DonorRecord";
+import UserRecord from "./pages/admin/UserRecord";
 
 function App() {
   const { authUser } = useAuthContext();
@@ -31,13 +34,25 @@ function App() {
             element={authUser ? <Navigate to="/" /> : <Signup />}
           />
           <Route path="/donor" element={<DonorCard />} />
-          <Route 
+          <Route
             path="/donor-registration"
             element={authUser ? <DonorRegistration /> : <Navigate to="/login" />}
           />
           <Route
             path="/blood-need"
             element={authUser ? <BloodNeed /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/admin"
+            element={authUser ? <AdminPage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/admin/donors"
+            element={authUser && authUser.admin ? <DonorRecord /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/admin/users"
+            element={authUser && authUser.admin ? <UserRecord /> : <Navigate to="/login" />}
           />
         </Routes>
       </div>
