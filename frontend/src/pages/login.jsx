@@ -4,7 +4,7 @@ import useLogin from "../hooks/useLogin";
 import useAuthContext from "../context/useAuthContext";
 
 function Login() {
-  const [identifier, setIdentifier] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { loading, login } = useLogin();
   const { setAuthUser } = useAuthContext();
@@ -13,7 +13,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-  const user = await login(identifier, password);
+    const user = await login(username, password);
 
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -33,16 +33,16 @@ function Login() {
           <div className="w-20 h-1 bg-gradient-to-r from-red-500 to-pink-500 mx-auto mt-2 rounded-full"></div>
         </h1>
 
-        {/* Email or Username */}
+        {/* Username */}
         <div className="w-full flex flex-col items-center">
           <label className="text-sm font-medium text-gray-300 mb-1 text-center">
-            Email or Username
+            Username
           </label>
           <input
             type="text"
-            placeholder="Enter Email or Username"
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
+            placeholder="Enter Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="w-3/4 px-4 py-3 rounded-xl bg-gray-800 placeholder-gray-500 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
           />
         </div>

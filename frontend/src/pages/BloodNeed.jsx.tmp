@@ -29,49 +29,28 @@ const BloodNeed = () => {
       return;
     }
     
-    // Check if we have matching donors from the form submission
     if (location.state?.matchingDonors) {
-      console.log('Received matching donors from form:', location.state.matchingDonors);
-      setMatchingDonors(location.state.matchingDonors);
       setLoading(false);
-      toast.success(location.state.message || 'Found matching donors!');
+      toast.success(location.state.message);
     } else {
-      console.log('No matching donors in location state, fetching all donors');
       fetchDonors();
     }
   }, [authUser, navigate, location.state]);
 
   const fetchDonors = async () => {
     try {
-      setLoading(true);
       const response = await fetch("http://localhost:1234/api/donors/all", {
         headers: {
           "Authorization": `Bearer ${authUser.token}`
         }
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
       const data = await response.json();
-      console.log('Fetched donors:', data);
-
       if (data.error) {
         throw new Error(data.error);
       }
-
-      // Transform the data to match the expected format
-      const transformedDonors = data.map(donor => ({
-        ...donor,
-        listType: 'All Donors'
-      }));
-
-      setDonors(transformedDonors);
+      setDonors(data);
     } catch (error) {
-      console.error('Error fetching donors:', error);
       toast.error(error.message || "Failed to fetch donors");
-      setDonors([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
@@ -89,21 +68,10 @@ const BloodNeed = () => {
   // Get active donor list
   const getActiveDonorList = () => {
     if (matchingDonors) {
-      // Check if matchingDonors has the expected structure
-      const exactMatches = matchingDonors.exactMatches || [];
-      const compatibleMatches = matchingDonors.compatibleMatches || [];
-      const otherCityMatches = matchingDonors.otherCityMatches || [];
-
-      console.log('Matching Donors Data:', {
-        exact: exactMatches.length,
-        compatible: compatibleMatches.length,
-        otherCity: otherCityMatches.length
-      });
-
       const allDonors = [
-        ...exactMatches.map(d => ({ ...d, listType: 'Exact Match - Same City' })),
-        ...compatibleMatches.map(d => ({ ...d, listType: 'Compatible Match - Same City' })),
-        ...otherCityMatches.map(d => ({ ...d, listType: 'Exact Match - Other City' }))
+        ...matchingDonors.exactMatches.map(d => ({ ...d, listType: 'Exact Match - Same City' })),
+        ...matchingDonors.compatibleMatches.map(d => ({ ...d, listType: 'Compatible Match - Same City' })),
+        ...matchingDonors.otherCityMatches.map(d => ({ ...d, listType: 'Exact Match - Other City' }))
       ];
       return allDonors;
     }
@@ -112,27 +80,11 @@ const BloodNeed = () => {
 
   // Apply filters to donors
   const filteredDonors = getActiveDonorList().filter(donor => {
-    const bloodGroupMatch = !filters.bloodGroup || 
-      donor.bloodGroup?.toLowerCase().includes(filters.bloodGroup.toLowerCase());
-    
-    const cityMatch = !filters.city || 
-      donor.city?.toLowerCase().includes(filters.city.toLowerCase());
-    
-    const matchTypeMatch = !filters.matchType || 
-      donor.listType?.includes(filters.matchType);
-
-    // Debug logging
-    if (donor.bloodGroup && donor.city && !bloodGroupMatch && !cityMatch) {
-      console.log('Filtered out donor:', {
-        donor: donor.name,
-        bloodGroup: donor.bloodGroup,
-        city: donor.city,
-        matchType: donor.listType,
-        filters
-      });
-    }
-
-    return bloodGroupMatch && cityMatch && matchTypeMatch;
+    return (
+      (!filters.bloodGroup || donor.bloodGroup.toLowerCase().includes(filters.bloodGroup.toLowerCase())) &&
+      (!filters.city || donor.city.toLowerCase().includes(filters.city.toLowerCase())) &&
+      (!filters.matchType || donor.listType?.includes(filters.matchType))
+    );
   });
 
   // Get match type color
