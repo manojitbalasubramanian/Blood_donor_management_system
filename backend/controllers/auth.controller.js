@@ -1,3 +1,21 @@
+// Update own user profile
+export const updateProfile = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const allowedFields = [
+            "fullname", "username", "email", "gender", "bloodgroup", "city", "phone", "age", "address"
+        ];
+        const updates = {};
+        for (const field of allowedFields) {
+            if (req.body[field] !== undefined) updates[field] = req.body[field];
+        }
+        const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true, runValidators: true });
+        if (!updatedUser) return res.status(404).json({ error: "User not found" });
+        res.status(200).json({ message: "Profile updated", user: updatedUser });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to update profile" });
+    }
+};
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import generatetokenandsetcookie from "../utils/generatetokens.js";

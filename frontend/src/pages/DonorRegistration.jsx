@@ -55,7 +55,25 @@ export default function DonorRegistration() {
     if (!authUser) {
       toast.error("Please login to register as a donor");
       navigate("/login");
+      return;
     }
+    // Check if user already has a donor record
+    const checkExistingDonor = async () => {
+      try {
+        const res = await fetch('http://localhost:1234/api/donors/all', {
+          headers: { 'Authorization': `Bearer ${authUser.token}` }
+        });
+        const donors = await res.json();
+        const donor = donors.find(d => d.userId === authUser._id);
+        if (donor) {
+          toast('You have already registered as a donor. Redirecting to update page...', { icon: 'ℹ️' });
+          navigate('/update-donor-data');
+        }
+      } catch {
+        // ignore fetch errors
+      }
+    };
+    checkExistingDonor();
   }, [authUser, navigate]);
 
   // Validation functions
