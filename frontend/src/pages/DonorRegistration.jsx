@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import StateDistrictSelect from "../components/StateDistrictSelect";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useAuthContext from "../context/useAuthContext";
@@ -542,33 +543,19 @@ export default function DonorRegistration() {
 
           {/* Location */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                City
-              </label>
-              <input
-                className={`${inputBase} ${errors.city ? 'border-red-500 ring-1 ring-red-500' : ''}`}
-                type="text"
-                name="city"
-                value={form.city}
-                onChange={handleChange}
-                required
+            <div className="md:col-span-2">
+              <StateDistrictSelect
+                stateValue={form.state}
+                districtValue={form.city}
+                onStateChange={(state) => setForm((prev) => ({ ...prev, state, city: "" }))}
+                onDistrictChange={(city) => setForm((prev) => ({ ...prev, city }))}
+                stateName="state"
+                districtName="city"
+                required={true}
               />
               {errors.city && (
                 <p className="mt-1 text-sm text-red-500">{errors.city}</p>
               )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                State
-              </label>
-              <input
-                className={inputBase}
-                type="text"
-                name="state"
-                value={form.state}
-                onChange={handleChange}
-              />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

@@ -1,26 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import useAuthContext from "../context/useAuthContext";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-
 
 const BloodNeed = () => {
   const [donors, setDonors] = useState([]);
   const [loading, setLoading] = useState(true);
   const { authUser } = useAuthContext();
   const navigate = useNavigate();
-  const location = useLocation();
-  
-  // Get matching donors from navigation state
-  const [matchingDonors, setMatchingDonors] = useState(location.state?.matchingDonors || null);
-  const [requestMessage] = useState(location.state?.message || '');
-  
-
-  // Filter states (will be set from recipient data)
+  // Filter states
   const [filters, setFilters] = useState({
     bloodGroup: '',
     city: '',
-    matchType: ''
+    state: '',
   });
 
   // Fetch latest recipient for the logged-in user and set filters
@@ -39,7 +31,7 @@ const BloodNeed = () => {
         }
         const latest = userRecipients.length > 0 ? userRecipients[userRecipients.length - 1] : recipients[recipients.length - 1];
         if (latest) {
-          setFilters(f => ({ ...f, bloodGroup: latest.bloodGroup, city: latest.city }));
+          setFilters(f => ({ ...f, bloodGroup: latest.bloodGroup, city: latest.city, state: latest.state }));
         }
       } catch {
         // fallback: do not set filters
@@ -54,100 +46,39 @@ const BloodNeed = () => {
       navigate("/login");
       return;
     }
+    fetchDonors();
+  }, [authUser, navigate]);
 
-    const fetchDonors = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("http://localhost:1234/api/donors/all", {
-          headers: {
-            "Authorization": `Bearer ${authUser.token}`
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+  const fetchDonors = async () => {
+    try {
+      const response = await fetch("http://localhost:1234/api/donors/all", {
+        headers: {
+          "Authorization": `Bearer ${authUser.token}`
         }
-
-        const data = await response.json();
-        console.log('Fetched donors:', data);
-
-        if (data.error) {
-          throw new Error(data.error);
-        }
-
-        // Transform the data to match the expected format
-        const transformedDonors = data.map(donor => ({
-          ...donor,
-          listType: 'All Donors'
-        }));
-
-        setDonors(transformedDonors);
-        console.log('Transformed donors set to state:', transformedDonors);
-      } catch (error) {
-        console.error('Error fetching donors:', error);
-        toast.error(error.message || "Failed to fetch donors");
-        setDonors([]); // Set empty array on error
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Check if we have matching donors from the form submission
-    if (location.state?.matchingDonors) {
-      console.log('Received matching donors from form:', location.state.matchingDonors);
-      setMatchingDonors(location.state.matchingDonors);
-      setLoading(false);
-      toast.success(location.state.message || 'Found matching donors!');
-    } else {
-      console.log('No matching donors in location state, fetching all donors');
-      fetchDonors();
-    }
-  }, [authUser, navigate, location.state]);
-
-  // ...existing code...
-
-  // Filter handlers
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  // Get active donor list
-  const getActiveDonorList = () => {
-    if (matchingDonors) {
-      // Check if matchingDonors has the expected structure
-      const exactMatches = matchingDonors.exactMatches || [];
-      const compatibleMatches = matchingDonors.compatibleMatches || [];
-      const otherCityMatches = matchingDonors.otherCityMatches || [];
-
-      console.log('Matching Donors Data:', {
-        exact: exactMatches.length,
-        compatible: compatibleMatches.length,
-        otherCity: otherCityMatches.length
       });
-
-      const allDonors = [
-        ...exactMatches.map(d => ({ ...d, listType: 'Exact Match - Same City' })),
-        ...compatibleMatches.map(d => ({ ...d, listType: 'Compatible Match - Same City' })),
-        ...otherCityMatches.map(d => ({ ...d, listType: 'Exact Match - Other City' }))
-      ];
-      return allDonors;
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      setDonors(data);
+    } catch (error) {
+      toast.error(error.message || "Failed to fetch donors");
+    } finally {
+      setLoading(false);
     }
-    return donors;
   };
 
-  // Display all donors without filtering
-  // const filteredDonors = getActiveDonorList().filter(donor => {
-  //   ...filter logic...
-  // });
-  const filteredDonors = getActiveDonorList();
-  console.log('Filtered donors to display:', filteredDonors);
+  // All filters are now read-only (hardcoded from recipient)
+  const handleFilterChange = () => {};
 
-  // Get match type color
-
+  // Apply filters to donors
+  const filteredDonors = donors.filter(donor => {
+    return (
+      (!filters.bloodGroup || donor.bloodGroup.toLowerCase().includes(filters.bloodGroup.toLowerCase())) &&
+      (!filters.city || donor.city.toLowerCase().includes(filters.city.toLowerCase())) &&
+      (!filters.state || donor.state.toLowerCase().includes(filters.state.toLowerCase()))
+    );
+  });
 
   if (loading) {
     return (
@@ -160,17 +91,8 @@ const BloodNeed = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-          {matchingDonors ? 'Matching Blood Donors' : 'Blood Donor Directory'}
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Blood Donor Directory</h1>
         
-        {/* Success Message */}
-        {requestMessage && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-            {requestMessage}
-          </div>
-        )}
-
         {/* Filters */}
         <div className="bg-white p-4 rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
@@ -195,25 +117,20 @@ const BloodNeed = () => {
               placeholder="Filter by city"
             />
           </div>
-          {matchingDonors && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Match Type</label>
-              <select
-                name="matchType"
-                value={filters.matchType}
-                onChange={handleFilterChange}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="">All Matches</option>
-                <option value="Exact Match - Same City">Exact Match - Same City</option>
-                <option value="Compatible Match">Compatible Match</option>
-                <option value="Other City">Other Cities</option>
-              </select>
-            </div>
-          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
+            <input
+              type="text"
+              name="state"
+              value={filters.state}
+              readOnly
+              className="w-full p-2 border rounded-md bg-gray-100 cursor-not-allowed"
+              placeholder="Filter by state"
+            />
+          </div>
         </div>
 
-        {/* Donors Table (copied from admin DonorRecord) */}
+        {/* Table */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -221,35 +138,38 @@ const BloodNeed = () => {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blood Group</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">City</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">State</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Availability</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredDonors.map((donor, idx) => (
-                  <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                {filteredDonors.map((donor, index) => (
+                  <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{donor.fullName}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.bloodGroup}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.age}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.gender}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.city}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.state}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.phone}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.availability ? 'Available' : 'Unavailable'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${donor.availability ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                        {donor.availability ? 'Available' : 'Unavailable'}
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            {filteredDonors.length === 0 && (
-              <div className="text-center py-4 text-gray-500">No donor records found</div>
-            )}
           </div>
+          {filteredDonors.length === 0 && (
+            <div className="text-center py-4 text-gray-500">No donors found matching the filters</div>
+          )}
         </div>
-
-        {filteredDonors.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-xl text-gray-600">No matching donors found</p>
-            <p className="text-gray-400 mt-2">Try adjusting your filters or check back later</p>
-          </div>
-        )}
       </div>
     </div>
   );

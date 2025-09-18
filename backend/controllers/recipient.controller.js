@@ -86,6 +86,7 @@ export const handleBloodRequest = async (req, res) => {
     try {
         console.log('Received request body:', req.body); // Debug log
 
+
         const {
             name,
             age,
@@ -94,13 +95,14 @@ export const handleBloodRequest = async (req, res) => {
             contactNumber,
             hospital,
             city,
+            state,
             reason,
             unitsNeeded,
             urgency
         } = req.body;
 
         // Validate required fields
-        if (!name || !bloodGroup || !contactNumber || !city || !hospital || !unitsNeeded) {
+        if (!name || !bloodGroup || !contactNumber || !city || !state || !hospital || !unitsNeeded) {
             return res.status(400).json({ error: 'Please fill in all required fields' });
         }
 
@@ -113,6 +115,7 @@ export const handleBloodRequest = async (req, res) => {
             contactNumber: contactNumber.trim(),
             hospital: hospital.trim(),
             city: city.trim().toLowerCase(),
+            state: state.trim(),
             reason: reason.trim(),
             unitsNeeded: parseInt(unitsNeeded),
             urgency: urgency,

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import StateDistrictSelect from '../components/StateDistrictSelect';
 import { useNavigate } from 'react-router-dom';
 import useAuthContext from '../context/useAuthContext';
 import { motion } from 'framer-motion';
@@ -18,6 +19,7 @@ const RecipientForm = () => {
         contactNumber: '',
         hospital: '',
         city: '',
+        state: '',
         reason: '',
         unitsNeeded: '',
         urgency: ''
@@ -37,6 +39,7 @@ const RecipientForm = () => {
         }
         if (!formData.hospital.trim()) errors.hospital = "Hospital name is required";
         if (!formData.city.trim()) errors.city = "City is required";
+        if (!formData.state.trim()) errors.state = "State is required";
         if (!formData.reason.trim()) errors.reason = "Reason is required";
         if (!formData.unitsNeeded || formData.unitsNeeded < 1) {
             errors.unitsNeeded = "At least 1 unit is required";
@@ -110,6 +113,14 @@ const RecipientForm = () => {
             ...prev,
             [name]: value
         }));
+    };
+
+    // For StateDistrictSelect
+    const handleStateChange = (state) => {
+        setFormData(prev => ({ ...prev, state, city: '' }));
+    };
+    const handleDistrictChange = (city) => {
+        setFormData(prev => ({ ...prev, city }));
     };
 
     return (
@@ -251,18 +262,16 @@ const RecipientForm = () => {
                                     />
                                 </div>
 
-                                {/* City */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        City
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="city"
-                                        required
-                                        value={formData.city}
-                                        onChange={handleChange}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                                {/* State & District Dropdown */}
+                                <div className="md:col-span-2">
+                                    <StateDistrictSelect
+                                        stateValue={formData.state}
+                                        districtValue={formData.city}
+                                        onStateChange={handleStateChange}
+                                        onDistrictChange={handleDistrictChange}
+                                        stateName="state"
+                                        districtName="city"
+                                        required={true}
                                     />
                                 </div>
 
