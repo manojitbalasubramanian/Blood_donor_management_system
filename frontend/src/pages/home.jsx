@@ -63,7 +63,7 @@ export default function Home() {
               Become a Donor
             </button>
             <button
-              onClick={() => navigate("/blood-need")}
+              onClick={() => navigate("/recipient-form")}
               className="px-8 py-4 bg-gradient-to-r from-pink-100 to-red-100 text-red-700 font-semibold rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 border border-red-200 flex items-center justify-center gap-2"
             >
               <Phone size={20} />

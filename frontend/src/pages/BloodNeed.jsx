@@ -89,7 +89,7 @@ const BloodNeed = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50 p-8 overflow-auto">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Blood Donor Directory</h1>
         

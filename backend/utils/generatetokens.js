@@ -1,20 +1,19 @@
 import jwt from "jsonwebtoken";
 
-const generatetoken =(userId,res)=>{
-    const token =jwt.sign(
-        {userId},
+const generatetoken = (userId, res) => {
+    const token = jwt.sign(
+        { userId },
         process.env.JWT_SECRET,
-        {expiresIn:"15d"}
-    )
+        { expiresIn: "1h" } // Token expires in 1 hour
+    );
     res.cookie("jwt", token, {
-        maxAge: 15*24*60*60*1000, // 15 days
+        // No maxAge or expires: session cookie, expires when browser closes
         httpOnly: true,
-        sameSite: "lax", // Changed from strict to lax to allow cross-site requests
+        sameSite: "lax",
         secure: process.env.NODE_ENV !== "development",
-        path: "/",  // Ensure cookie is available for all paths
+        path: "/",
     });
-    
-    console.log("Cookie set:", token);
+    console.log("Session cookie set:", token);
 };
 
 export default generatetoken;

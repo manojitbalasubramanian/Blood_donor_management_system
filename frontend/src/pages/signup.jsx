@@ -10,6 +10,7 @@ const Signup = () => {
   const [formData, setFormData] = useState({
     fullname: "",
     username: "",
+    email: "",
     password: "",
     confrimpassword: "",
     gender: "",
@@ -36,6 +37,14 @@ const Signup = () => {
       newErrors.username = "Username is required";
     } else if (formData.username.length < 3) {
       newErrors.username = "Username must be at least 3 characters long";
+    }
+
+
+    // Validate email
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Invalid email address";
     }
 
     // Validate password
@@ -142,6 +151,24 @@ const Signup = () => {
           />
           {errors.fullname && (
             <span className="text-red-500 text-xs mt-1">{errors.fullname}</span>
+          )}
+
+
+          {/* Email */}
+          <label className="mt-4 mb-1 text-sm text-gray-300">Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className={`p-3 rounded-xl bg-gray-800 text-sm text-white placeholder-gray-500 outline-none focus:bg-gray-700 focus:ring-2 ${
+              errors.email ? "ring-2 ring-red-500" : "focus:ring-red-500"
+            }`}
+          />
+          {errors.email && (
+            <span className="text-red-500 text-xs mt-1">{errors.email}</span>
           )}
 
           {/* Username */}
