@@ -10,7 +10,7 @@ const RecipientRecord = () => {
   const [modalType, setModalType] = useState('create');
   const [selectedRecipient, setSelectedRecipient] = useState(null);
   const [formData, setFormData] = useState({
-    fullName: '',
+  name: '',
     bloodGroup: '',
     age: '',
     gender: '',
@@ -163,7 +163,7 @@ const RecipientRecord = () => {
             {recipients.map((recipient) => (
               <tr key={recipient._id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{recipient.fullName}</div>
+                  <div className="text-sm font-medium text-gray-900">{recipient.name && recipient.name.trim() ? recipient.name : 'No Name'}</div>
                   <div className="text-sm text-gray-500">{recipient.email}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -223,8 +223,8 @@ const RecipientRecord = () => {
                 <label className="block mb-1">Full Name</label>
                 <input
                   type="text"
-                  name="fullName"
-                  value={formData.fullName}
+                  name="name"
+                  value={formData.name}
                   onChange={handleFormChange}
                   className="w-full border rounded p-2"
                   required

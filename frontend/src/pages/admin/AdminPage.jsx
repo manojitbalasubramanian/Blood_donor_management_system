@@ -2,15 +2,48 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, UserPlus, Activity, Calendar, Heart, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import useAuthContext from '../../context/useAuthContext';
 
 const AdminPage = () => {
   const navigate = useNavigate();
+  const { authUser } = useAuthContext();
   const [stats, setStats] = useState({
-    totalDonors: 245,
-    activeDonors: 180,
-    totalUsers: 320,
-    recentDonations: 45
+    totalDonors: 0,
+    activeDonors: 0,
+    totalUsers: 0,
+    recentDonations: 0
   });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!authUser || !authUser.token) return;
+      try {
+        const headers = {
+          'Authorization': `Bearer ${authUser.token}`,
+          'Content-Type': 'application/json'
+        };
+        // Fetch donors
+        const donorRes = await fetch("http://localhost:1234/api/donors/all", { headers });
+        const donors = await donorRes.json();
+        // Fetch users
+        const userRes = await fetch("http://localhost:1234/api/admin/all", { headers });
+        const users = await userRes.json();
+        // Fetch recipients (for recent donations)
+        const recRes = await fetch("http://localhost:1234/api/recipient/all", { headers });
+        const recipients = await recRes.json();
+
+        setStats({
+          totalDonors: donors.length,
+          activeDonors: donors.filter(d => d.availability).length,
+          totalUsers: users.length,
+          requests: recipients.filter(r => r.status === 'Pending').length
+        });
+      } catch (err) {
+        // fallback: do nothing
+      }
+    };
+    fetchStats();
+  }, [authUser]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -62,12 +95,7 @@ const AdminPage = () => {
                 <Users size={24} />
               </div>
             </div>
-            <div className="mt-4">
-              <div className="text-green-500 text-xs flex items-center">
-                <Activity size={14} className="mr-1" />
-                +12% from last month
-              </div>
-            </div>
+            {/* Removed percentage change for cleaner look */}
           </motion.div>
 
           <motion.div
@@ -83,12 +111,7 @@ const AdminPage = () => {
                 <UserPlus size={24} />
               </div>
             </div>
-            <div className="mt-4">
-              <div className="text-green-500 text-xs flex items-center">
-                <Activity size={14} className="mr-1" />
-                +5% this week
-              </div>
-            </div>
+            {/* Removed percentage change for cleaner look */}
           </motion.div>
 
           <motion.div
@@ -104,12 +127,7 @@ const AdminPage = () => {
                 <Users size={24} />
               </div>
             </div>
-            <div className="mt-4">
-              <div className="text-green-500 text-xs flex items-center">
-                <Activity size={14} className="mr-1" />
-                +8% this month
-              </div>
-            </div>
+            {/* Removed percentage change for cleaner look */}
           </motion.div>
 
           <motion.div
@@ -118,19 +136,14 @@ const AdminPage = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500 text-sm">Recent Donations</p>
-                <h3 className="text-3xl font-bold text-gray-900">{stats.recentDonations}</h3>
+                <p className="text-gray-500 text-sm">Requests</p>
+                <h3 className="text-3xl font-bold text-gray-900">{stats.requests}</h3>
               </div>
               <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center text-pink-600">
                 <Calendar size={24} />
               </div>
             </div>
-            <div className="mt-4">
-              <div className="text-green-500 text-xs flex items-center">
-                <Activity size={14} className="mr-1" />
-                +15% this week
-              </div>
-            </div>
+            {/* Removed percentage change for cleaner look */}
           </motion.div>
         </motion.div>
 
