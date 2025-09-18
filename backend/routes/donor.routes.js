@@ -9,12 +9,12 @@ import {
     updateDonor,
     deleteDonor
 } from "../controllers/donor.controller.js";
-import protection from "../middleware/protection.js";
+import { protect } from "../middleware/protection.js";
 
 const router = express.Router();
 
 // All routes are protected - require authentication
-router.use(protection);
+router.use(protect);
 
 // Register as a donor
 router.post("/register", registerDonor);

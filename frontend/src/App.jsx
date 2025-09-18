@@ -4,6 +4,7 @@ import Home from "./pages/home";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
 import DonorCard from "./pages/DonorCard";
+import RecipientForm from "./pages/RecipientForm";
 import BloodNeed from "./pages/BloodNeed";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -12,6 +13,7 @@ import DonorRegistration from "./pages/DonorRegistration";
 import AdminPage from "./pages/admin/AdminPage";
 import DonorRecord from "./pages/admin/DonorRecord";
 import UserRecord from "./pages/admin/UserRecord";
+import RecipientRecord from "./pages/admin/RecipientRecord";
 
 function App() {
   const { authUser } = useAuthContext();
@@ -39,6 +41,10 @@ function App() {
             element={authUser ? <DonorRegistration /> : <Navigate to="/login" />}
           />
           <Route
+            path="/recipient-form"
+            element={authUser ? <RecipientForm /> : <Navigate to="/login" />}
+          />
+          <Route
             path="/blood-need"
             element={authUser ? <BloodNeed /> : <Navigate to="/login" />}
           />
@@ -53,6 +59,10 @@ function App() {
           <Route
             path="/admin/users"
             element={authUser && authUser.admin ? <UserRecord /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/admin/recipients"
+            element={authUser && authUser.admin ? <RecipientRecord /> : <Navigate to="/login" />}
           />
         </Routes>
       </div>

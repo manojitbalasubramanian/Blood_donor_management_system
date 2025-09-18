@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import StateDistrictSelect from "../components/StateDistrictSelect";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useAuthContext from "../context/useAuthContext";
@@ -19,6 +20,8 @@ const initialForm = {
   country: "",
   address: "",
   lastDonation: "",
+  hasHealthIssues: false,
+  healthIssues: "",
   availability: true,
   consent: false,
 };
@@ -36,6 +39,7 @@ const initialErrors = {
   country: "",
   address: "",
   lastDonation: "",
+  healthIssues: "",
 };
 
 export default function DonorRegistration() {
@@ -98,7 +102,7 @@ export default function DonorRegistration() {
     if (!form.age) {
       newErrors.age = "Age is required";
       isValid = false;
-    } else if (form.age < 18 || form.age > 65) {
+    } else if (form.age < 19 || form.age > 65) {
       newErrors.age = "Age must be between 18 and 65";
       isValid = false;
     }
@@ -189,12 +193,27 @@ export default function DonorRegistration() {
       }
     }
 
+    // Health Issues validation
+    if (form.hasHealthIssues && !form.healthIssues.trim()) {
+      newErrors.healthIssues = "Please describe your health issues";
+      isValid = false;
+    }
+
     // Last Donation Date validation
     if (form.lastDonation) {
       const donationDate = new Date(form.lastDonation);
       const today = new Date();
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(today.getMonth() - 3);
+
       if (donationDate > today) {
         newErrors.lastDonation = "Last donation date cannot be in the future";
+        isValid = false;
+      } else if (donationDate > threeMonthsAgo) {
+        const nextEligibleDate = new Date(donationDate);
+        nextEligibleDate.setMonth(donationDate.getMonth() + 3);
+        
+        newErrors.lastDonation = `You must wait at least 3 months between donations. You will be eligible to donate after ${nextEligibleDate.toLocaleDateString()}`;
         isValid = false;
       }
     }
@@ -379,9 +398,9 @@ export default function DonorRegistration() {
                   className={`${inputBase} ${errors.age ? 'border-red-500 ring-1 ring-red-500' : ''}`}
                   type="number"
                   name="age"
-                  min="18"
+                  min="19"
                   max="65"
-                  placeholder="18"
+                  placeholder="19"
                   value={form.age}
                   onChange={handleChange}
                   required
@@ -506,47 +525,37 @@ export default function DonorRegistration() {
               <input
                 type="date"
                 name="lastDonation"
-                className={`${inputBase}`}
+                className={`${inputBase} ${errors.lastDonation ? 'border-red-500 ring-1 ring-red-500' : ''}`}
                 value={form.lastDonation}
                 onChange={handleChange}
-                max={new Date().toISOString().split('T')[0]} // Prevents future dates
+                max={new Date().toISOString().split('T')[0]}
                 title="Select your last blood donation date"
               />
-              <p className="mt-1 text-xs text-gray-500">
-                Leave empty if you haven't donated before
-              </p>
+              {errors.lastDonation ? (
+                <p className="mt-1 text-sm text-red-500">{errors.lastDonation}</p>
+              ) : (
+                <p className="mt-1 text-xs text-gray-500">
+                  Leave empty if you haven't donated before. You must wait 3 months between donations.
+                </p>
+              )}
             </div>
           </div>
 
           {/* Location */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                City
-              </label>
-              <input
-                className={`${inputBase} ${errors.city ? 'border-red-500 ring-1 ring-red-500' : ''}`}
-                type="text"
-                name="city"
-                value={form.city}
-                onChange={handleChange}
-                required
+            <div className="md:col-span-2">
+              <StateDistrictSelect
+                stateValue={form.state}
+                districtValue={form.city}
+                onStateChange={(state) => setForm((prev) => ({ ...prev, state, city: "" }))}
+                onDistrictChange={(city) => setForm((prev) => ({ ...prev, city }))}
+                stateName="state"
+                districtName="city"
+                required={true}
               />
               {errors.city && (
                 <p className="mt-1 text-sm text-red-500">{errors.city}</p>
               )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                State
-              </label>
-              <input
-                className={inputBase}
-                type="text"
-                name="state"
-                value={form.state}
-                onChange={handleChange}
-              />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -580,6 +589,63 @@ export default function DonorRegistration() {
             />
             {errors.address && (
               <p className="mt-1 text-sm text-red-500">{errors.address}</p>
+            )}
+          </div>
+
+          {/* Health Issues */}
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Do you have any health issues?
+            </label>
+            <div className="flex gap-4 mb-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="hasHealthIssues"
+                  value="true"
+                  checked={form.hasHealthIssues === true}
+                  onChange={(e) => setForm(prev => ({
+                    ...prev,
+                    hasHealthIssues: e.target.value === "true",
+                    healthIssues: e.target.value === "false" ? "" : prev.healthIssues
+                  }))}
+                  className="mr-2 text-red-600 focus:ring-red-500"
+                />
+                Yes
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="hasHealthIssues"
+                  value="false"
+                  checked={form.hasHealthIssues === false}
+                  onChange={(e) => setForm(prev => ({
+                    ...prev,
+                    hasHealthIssues: e.target.value === "true",
+                    healthIssues: e.target.value === "false" ? "" : prev.healthIssues
+                  }))}
+                  className="mr-2 text-red-600 focus:ring-red-500"
+                />
+                No
+              </label>
+            </div>
+            {form.hasHealthIssues && (
+              <div className="mt-3">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Please describe your health issues
+                </label>
+                <textarea
+                  name="healthIssues"
+                  value={form.healthIssues}
+                  onChange={handleChange}
+                  className={`${inputBase} min-h-[80px] resize-y ${errors.healthIssues ? 'border-red-500 ring-1 ring-red-500' : ''}`}
+                  placeholder="Please describe any current or chronic health conditions..."
+                  required={form.hasHealthIssues}
+                />
+                {errors.healthIssues && (
+                  <p className="mt-1 text-sm text-red-500">{errors.healthIssues}</p>
+                )}
+              </div>
             )}
           </div>
 

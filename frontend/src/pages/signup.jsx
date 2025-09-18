@@ -1,4 +1,5 @@
 import { useState } from "react";
+import StateDistrictSelect from "../components/StateDistrictSelect";
 import { Link } from "react-router-dom";
 import useSignup from "../hooks/useSignup";
 
@@ -7,26 +8,21 @@ const Signup = () => {
   const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
-  fullname: "",
-  username: "",
-  email: "",
-  password: "",
-  confrimpassword: "",
-  gender: "",
-  bloodgroup: "",
-  city: "",
-  phone: "",
-  age: "",
-  address: "",
+    fullname: "",
+    username: "",
+    email: "",
+    password: "",
+    confrimpassword: "",
+    gender: "",
+    bloodgroup: "",
+    city: "",
+    state: "",
+    phone: "",
+    age: "",
+    address: "",
   });
 
   const validateForm = () => {
-    // Validate email
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
     const newErrors = {};
     
     // Validate fullname
@@ -41,6 +37,14 @@ const Signup = () => {
       newErrors.username = "Username is required";
     } else if (formData.username.length < 3) {
       newErrors.username = "Username must be at least 3 characters long";
+    }
+
+
+    // Validate email
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Invalid email address";
     }
 
     // Validate password
@@ -103,6 +107,13 @@ const Signup = () => {
       setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
     }
   };
+  // For StateDistrictSelect
+  const handleStateChange = (state) => {
+    setFormData((prev) => ({ ...prev, state, city: "" }));
+  };
+  const handleDistrictChange = (city) => {
+    setFormData((prev) => ({ ...prev, city }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -141,6 +152,7 @@ const Signup = () => {
           {errors.fullname && (
             <span className="text-red-500 text-xs mt-1">{errors.fullname}</span>
           )}
+
 
           {/* Email */}
           <label className="mt-4 mb-1 text-sm text-gray-300">Email</label>
@@ -246,22 +258,21 @@ const Signup = () => {
             <span className="text-red-500 text-xs mt-1">{errors.bloodgroup}</span>
           )}
 
-          {/* City */}
-          <label className="mt-4 mb-1 text-sm text-gray-300">City</label>
-          <input
-            type="text"
-            name="city"
-            placeholder="City"
-            value={formData.city}
-            onChange={handleChange}
-            required
-            className={`p-3 rounded-xl bg-gray-800 text-sm text-white placeholder-gray-500 outline-none focus:bg-gray-700 focus:ring-2 ${
-              errors.city ? "ring-2 ring-red-500" : "focus:ring-red-500"
-            }`}
-          />
-          {errors.city && (
-            <span className="text-red-500 text-xs mt-1">{errors.city}</span>
-          )}
+          {/* State & City Dropdown */}
+          <div className="mt-4">
+            <StateDistrictSelect
+              stateValue={formData.state}
+              districtValue={formData.city}
+              onStateChange={handleStateChange}
+              onDistrictChange={handleDistrictChange}
+              stateName="state"
+              districtName="city"
+              required={true}
+            />
+            {errors.city && (
+              <span className="text-red-500 text-xs mt-1">{errors.city}</span>
+            )}
+          </div>
 
           {/* Phone */}
           <label className="mt-4 mb-1 text-sm text-gray-300">Phone Number</label>

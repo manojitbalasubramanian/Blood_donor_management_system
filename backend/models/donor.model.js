@@ -83,7 +83,19 @@ const donorSchema = new mongoose.Schema({
         required: true
     },
     lastDonation: {
-        type: Date
+        type: Date,
+        validate: {
+            validator: function(date) {
+                if (!date) return true; // Allow null for first-time donors
+                
+                const today = new Date();
+                const threeMonthsAgo = new Date();
+                threeMonthsAgo.setMonth(today.getMonth() - 3);
+                
+                return date <= today && date < threeMonthsAgo;
+            },
+            message: 'You must wait at least 3 months between donations. Please try registering after your cooling period.'
+        }
     },
     availability: {
         type: Boolean,
@@ -93,6 +105,25 @@ const donorSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    hasHealthIssues: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    healthIssues: {
+        type: String,
+        validate: {
+            validator: function(value) {
+                if (this.hasHealthIssues === true) {
+                    return value && value.trim().length > 0;
+                }
+                return true;
+            },
+            message: 'Please describe your health issues'
+        },
+        trim: true,
+        default: ''
     }
 }, { timestamps: true });
 

@@ -8,15 +8,37 @@ const BloodNeed = () => {
   const [loading, setLoading] = useState(true);
   const { authUser } = useAuthContext();
   const navigate = useNavigate();
-  
   // Filter states
   const [filters, setFilters] = useState({
     bloodGroup: '',
     city: '',
     state: '',
-    age: '',
-    gender: '',
   });
+
+  // Fetch latest recipient for the logged-in user and set filters
+  useEffect(() => {
+    const fetchRecipientAndSetFilters = async () => {
+      try {
+        const response = await fetch('http://localhost:1234/api/recipient/all', {
+          headers: { 'Authorization': `Bearer ${authUser.token}` }
+        });
+        if (!response.ok) throw new Error('Failed to fetch recipient data');
+        const recipients = await response.json();
+        // Get the latest recipient for the logged-in user (by email or userId if available)
+        let userRecipients = recipients;
+        if (authUser?.email) {
+          userRecipients = recipients.filter(r => r.contactNumber === authUser.phone || r.email === authUser.email);
+        }
+        const latest = userRecipients.length > 0 ? userRecipients[userRecipients.length - 1] : recipients[recipients.length - 1];
+        if (latest) {
+          setFilters(f => ({ ...f, bloodGroup: latest.bloodGroup, city: latest.city, state: latest.state }));
+        }
+      } catch {
+        // fallback: do not set filters
+      }
+    };
+    if (authUser) fetchRecipientAndSetFilters();
+  }, [authUser]);
 
   useEffect(() => {
     if (!authUser) {
@@ -46,23 +68,15 @@ const BloodNeed = () => {
     }
   };
 
-  // Filter handlers
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  // All filters are now read-only (hardcoded from recipient)
+  const handleFilterChange = () => {};
 
   // Apply filters to donors
   const filteredDonors = donors.filter(donor => {
     return (
       (!filters.bloodGroup || donor.bloodGroup.toLowerCase().includes(filters.bloodGroup.toLowerCase())) &&
       (!filters.city || donor.city.toLowerCase().includes(filters.city.toLowerCase())) &&
-      (!filters.state || donor.state.toLowerCase().includes(filters.state.toLowerCase())) &&
-      (!filters.age || donor.age.toString() === filters.age) &&
-      (!filters.gender || donor.gender.toLowerCase() === filters.gender.toLowerCase())
+      (!filters.state || donor.state.toLowerCase().includes(filters.state.toLowerCase()))
     );
   });
 
@@ -75,20 +89,20 @@ const BloodNeed = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50 p-8 overflow-auto">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Blood Donor Directory</h1>
         
         {/* Filters */}
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Blood Group</label>
             <input
               type="text"
               name="bloodGroup"
               value={filters.bloodGroup}
-              onChange={handleFilterChange}
-              className="w-full p-2 border rounded-md"
+              readOnly
+              className="w-full p-2 border rounded-md bg-gray-100 cursor-not-allowed"
               placeholder="Filter by blood group"
             />
           </div>
@@ -98,8 +112,8 @@ const BloodNeed = () => {
               type="text"
               name="city"
               value={filters.city}
-              onChange={handleFilterChange}
-              className="w-full p-2 border rounded-md"
+              readOnly
+              className="w-full p-2 border rounded-md bg-gray-100 cursor-not-allowed"
               placeholder="Filter by city"
             />
           </div>
@@ -109,35 +123,10 @@ const BloodNeed = () => {
               type="text"
               name="state"
               value={filters.state}
-              onChange={handleFilterChange}
-              className="w-full p-2 border rounded-md"
+              readOnly
+              className="w-full p-2 border rounded-md bg-gray-100 cursor-not-allowed"
               placeholder="Filter by state"
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
-            <input
-              type="number"
-              name="age"
-              value={filters.age}
-              onChange={handleFilterChange}
-              className="w-full p-2 border rounded-md"
-              placeholder="Filter by age"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-            <select
-              name="gender"
-              value={filters.gender}
-              onChange={handleFilterChange}
-              className="w-full p-2 border rounded-md"
-            >
-              <option value="">All</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
           </div>
         </div>
 
