@@ -10,7 +10,7 @@ const DonorRecord = () => {
   const [modalType, setModalType] = useState('create'); // 'edit' or 'create'
   const [selectedDonor, setSelectedDonor] = useState(null);
   const [formData, setFormData] = useState({
-    fullName: '', bloodGroup: '', age: '', gender: '', height: '', weight: '', city: '', state: '', country: '', phone: '', email: '', address: '', lastDonation: '', availability: false, userId: '', password: ''
+    fullName: '', bloodGroup: '', age: '', gender: '', height: '', weight: '', city: '', state: '', country: '', phone: '', email: '', address: '', lastDonation: '', availability: false, userId: '', password: '', hasHealthIssues: false, healthIssues: ''
   });
   const [filters, setFilters] = useState({
     bloodGroup: '', city: '', state: '', age: '', gender: '',
@@ -195,6 +195,7 @@ const DonorRecord = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Health Issues</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Donation</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Availability</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
@@ -218,7 +219,21 @@ const DonorRecord = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.phone}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.address}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.lastDonation ? new Date(donor.lastDonation).toLocaleDateString() : '-'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {donor.hasHealthIssues ? (
+                      <span className="text-red-600" title={donor.healthIssues}>Yes ⓘ</span>
+                    ) : 'No'}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {donor.lastDonation ? (
+                      <div>
+                        <div>{new Date(donor.lastDonation).toLocaleDateString()}</div>
+                        <div className="text-xs text-gray-400">
+                          {Math.floor((new Date() - new Date(donor.lastDonation)) / (1000 * 60 * 60 * 24))} days ago
+                        </div>
+                      </div>
+                    ) : '-'}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.availability ? 'Available' : 'Unavailable'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.userId}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.createdAt ? new Date(donor.createdAt).toLocaleString() : '-'}</td>
@@ -255,6 +270,32 @@ const DonorRecord = () => {
               <input type="text" name="phone" value={formData.phone} onChange={handleFormChange} placeholder="Phone" className="p-2 border rounded" />
               <input type="email" name="email" value={formData.email} onChange={handleFormChange} placeholder="Email" className="p-2 border rounded" />
               <input type="text" name="address" value={formData.address} onChange={handleFormChange} placeholder="Address" className="col-span-2 p-2 border rounded" />
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Has Health Issues?</label>
+                <select
+                  name="hasHealthIssues"
+                  value={formData.hasHealthIssues}
+                  onChange={(e) => handleFormChange({
+                    target: {
+                      name: 'hasHealthIssues',
+                      value: e.target.value === 'true'
+                    }
+                  })}
+                  className="w-full p-2 border rounded"
+                >
+                  <option value={false}>No</option>
+                  <option value={true}>Yes</option>
+                </select>
+              </div>
+              {formData.hasHealthIssues && (
+                <textarea
+                  name="healthIssues"
+                  value={formData.healthIssues}
+                  onChange={handleFormChange}
+                  placeholder="Describe health issues"
+                  className="col-span-2 p-2 border rounded min-h-[80px]"
+                />
+              )}
               <input type="date" name="lastDonation" value={formData.lastDonation ? formData.lastDonation.substring(0,10) : ''} onChange={handleFormChange} placeholder="Last Donation" className="p-2 border rounded" />
               <label className="col-span-2 flex items-center gap-2">
                 <input type="checkbox" name="availability" checked={formData.availability} onChange={handleFormChange} /> Available

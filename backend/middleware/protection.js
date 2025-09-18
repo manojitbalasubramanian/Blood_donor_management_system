@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
-const protection = async (req, res, next) => {
+export const protect = async (req, res, next) => {
     try {
         // Get token from Authorization header
         const authHeader = req.headers.authorization;
@@ -44,4 +44,10 @@ const protection = async (req, res, next) => {
     }
 }
 
-export default protection;
+// Admin middleware to check if the user has admin privileges
+export const admin = async (req, res, next) => {
+    if (!req.user || !req.user.admin) {
+        return res.status(403).json({ error: "Access denied. Admin privileges required." });
+    }
+    next();
+};

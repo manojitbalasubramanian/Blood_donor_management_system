@@ -59,8 +59,32 @@ export const registerDonor = async (req, res) => {
     try {
         const { 
             fullName, email, phone, age, gender, bloodGroup, height, weight,
-            city, state, country, address
+            city, state, country, address, lastDonation, hasHealthIssues, healthIssues
         } = req.body;
+
+        // Log the request body for debugging
+        console.log("Request body:", req.body);
+        
+        // Validate last donation date if provided
+        if (lastDonation) {
+            const donationDate = new Date(lastDonation);
+            const today = new Date();
+            const threeMonthsAgo = new Date();
+            threeMonthsAgo.setMonth(today.getMonth() - 3);
+
+            if (donationDate > today) {
+                return res.status(400).json({ 
+                    error: "Last donation date cannot be in the future" 
+                });
+            }
+
+            if (donationDate > threeMonthsAgo) {
+                return res.status(400).json({ 
+                    error: "You must wait at least 3 months between donations. Please try registering after your cooling period.",
+                    nextEligibleDate: new Date(donationDate.setMonth(donationDate.getMonth() + 3)).toISOString().split('T')[0]
+                });
+            }
+        }
 
         // Add the logged-in user's ID to the donor data
         const userId = req.user._id;
@@ -96,6 +120,8 @@ export const registerDonor = async (req, res) => {
             state,
             country,
             address,
+            hasHealthIssues: hasHealthIssues || false,  // Default to false if not provided
+            healthIssues: healthIssues || "",  // Default to empty string if not provided
             userId
         });
 
