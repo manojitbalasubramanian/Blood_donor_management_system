@@ -18,8 +18,12 @@ const PORT = process.env.PORT || 1234;
 import cors from 'cors';
 
 // CORS configuration
+
 const corsOptions = {
-    origin: ["https://blood-donor-management-system-v4qz.onrender.com"],
+    origin: [
+        "https://blood-donor-management-system-v4qz.onrender.com", // backend
+        "https://blood-donor-management-system-jmxa.onrender.com"  // frontend
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
