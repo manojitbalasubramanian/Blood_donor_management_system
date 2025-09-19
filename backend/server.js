@@ -19,11 +19,13 @@ import cors from 'cors';
 
 // CORS configuration
 
+
+const allowedOrigins = [];
+if (process.env.VITE_BACKEND_URL) allowedOrigins.push(process.env.VITE_BACKEND_URL);
+if (process.env.VITE_FRONTEND_URL) allowedOrigins.push(process.env.VITE_FRONTEND_URL);
+
 const corsOptions = {
-    origin: [
-        "https://blood-donor-management-system-v4qz.onrender.com", // backend
-        "https://blood-donor-management-system-jmxa.onrender.com"  // frontend
-    ],
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],

@@ -23,13 +23,13 @@ const AdminPage = () => {
           'Content-Type': 'application/json'
         };
         // Fetch donors
-        const donorRes = await fetch("http://localhost:1234/api/donors/all", { headers });
+        const donorRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donors/all`, { headers });
         const donors = await donorRes.json();
         // Fetch users
-        const userRes = await fetch("http://localhost:1234/api/admin/all", { headers });
+        const userRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/admin/all`, { headers });
         const users = await userRes.json();
         // Fetch recipients (for recent donations)
-        const recRes = await fetch("http://localhost:1234/api/recipient/all", { headers });
+        const recRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/recipient/all`, { headers });
         const recipients = await recRes.json();
 
         setStats({

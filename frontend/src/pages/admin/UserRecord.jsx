@@ -27,7 +27,7 @@ const UserRecord = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:1234/api/admin/all', {
+  const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/all`, {
         headers: { Authorization: `Bearer ${authUser.token}` }
       });
       setUsers(response.data);
@@ -48,11 +48,12 @@ const UserRecord = () => {
   const handleDelete = async (userId) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     try {
-      await axios.delete(`http://localhost:1234/api/admin/${userId}`, {
+  await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/admin/${userId}`, {
         headers: { Authorization: `Bearer ${authUser.token}` }
       });
       fetchUsers();
     } catch (error) {
+      console.error(error);
       alert('Delete failed');
     }
   };
@@ -73,17 +74,18 @@ const UserRecord = () => {
     e.preventDefault();
     try {
       if (modalType === 'edit') {
-        await axios.put(`http://localhost:1234/api/admin/${selectedUser._id}`, formData, {
+  await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/admin/${selectedUser._id}`, formData, {
           headers: { Authorization: `Bearer ${authUser.token}` }
         });
       } else {
-        await axios.post('http://localhost:1234/api/admin/create', formData, {
+  await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/create`, formData, {
           headers: { Authorization: `Bearer ${authUser.token}` }
         });
       }
       setShowModal(false);
       fetchUsers();
     } catch (error) {
+      console.error(error);
       alert('Operation failed');
     }
   };

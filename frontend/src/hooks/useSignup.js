@@ -11,7 +11,7 @@ const useSignup = () => {
 
 		setLoading(true);
 				try {
-						const res = await fetch("https://blood-donor-management-system-v4qz.onrender.com/auth/signup", {
+						const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/signup`, {
 								method: "POST",
 								headers: {
 										'Content-Type': 'application/json',
