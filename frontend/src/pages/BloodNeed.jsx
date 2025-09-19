@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import useAuthContext from "../context/useAuthContext";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 const BloodNeed = () => {
+  const location = useLocation();
   const [donors, setDonors] = useState([]);
   const [loading, setLoading] = useState(true);
   const { authUser } = useAuthContext();
   const navigate = useNavigate();
+
+  // Only allow access if navigated from RecipientForm (location.state exists)
+  useEffect(() => {
+    if (!location.state) {
+      navigate('/recipient-form', { replace: true });
+    }
+  }, [location.state, navigate]);
   // Filter states
   const [filters, setFilters] = useState({
     bloodGroup: '',

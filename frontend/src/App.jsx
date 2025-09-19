@@ -14,6 +14,8 @@ import AdminPage from "./pages/admin/AdminPage";
 import DonorRecord from "./pages/admin/DonorRecord";
 import UserRecord from "./pages/admin/UserRecord";
 import RecipientRecord from "./pages/admin/RecipientRecord";
+import Profile from "./pages/Profile";
+import UpdateDonorData from "./pages/UpdateDonorData";
 
 function App() {
   const { authUser } = useAuthContext();
@@ -24,7 +26,7 @@ function App() {
       <Navbar />
 
       {/* Page Content */}
-      <div className="flex-grow">
+  <div className="flex-grow pt-24 pb-24">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
@@ -63,6 +65,14 @@ function App() {
           <Route
             path="/admin/recipients"
             element={authUser && authUser.admin ? <RecipientRecord /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/update-profile"
+            element={authUser ? <Profile /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/update-donor-data"
+            element={authUser ? <UpdateDonorData /> : <Navigate to="/login" />}
           />
         </Routes>
       </div>
