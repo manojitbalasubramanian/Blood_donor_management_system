@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAuthContext from "../context/useAuthContext";
 import useLogout from "../hooks/useLogout";
 import Logo from "../assets/logo.jpeg";
-import { Menu, X } from 'lucide-react';
+import { Menu, X, UserCircle } from 'lucide-react';
 
 function Navbar() {
   const { authUser } = useAuthContext();
@@ -90,18 +90,27 @@ function Navbar() {
                 </>
               )}
 
-              {authUser && authUser.admin && (
-                <NavLink to="/admin">Admin</NavLink>
-              )}
-              
               {authUser && (
-                <button
-                  onClick={handleLogout}
-                  disabled={loading}
-                  className="ml-4 bg-red-500 text-white px-4 py-1.5 rounded-lg font-medium hover:bg-red-600 hover:shadow-lg transform transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
-                >
-                  {loading ? "Logging out..." : "Logout"}
-                </button>
+                <div className="relative group">
+                  <button className="flex items-center space-x-2 focus:outline-none px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    <UserCircle size={28} className="text-red-400" />
+                    <span className="text-red-400 font-semibold">{authUser.fullname || 'User'}</span>
+                  </button>
+                  <div className="absolute right-0 mt-2 w-56 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 py-2 z-50 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 pointer-events-auto transition-all duration-200 flex flex-col gap-1">
+                    {authUser.admin && (
+                      <NavLink to="/admin" className={({isActive}) => `block px-5 py-2 rounded-lg transition-colors ${isActive ? 'bg-red-900 text-red-400 font-semibold' : 'text-gray-200 hover:bg-gray-700 hover:text-red-400'}`}>Admin</NavLink>
+                    )}
+                    <NavLink to="/update-profile" className={({isActive}) => `block px-5 py-2 rounded-lg transition-colors ${isActive ? 'bg-red-900 text-red-400 font-semibold' : 'text-gray-200 hover:bg-gray-700 hover:text-red-400'}`}>Update Profile</NavLink>
+                    <NavLink to="/update-donor-data" className={({isActive}) => `block px-5 py-2 rounded-lg transition-colors ${isActive ? 'bg-red-900 text-red-400 font-semibold' : 'text-gray-200 hover:bg-gray-700 hover:text-red-400'}`}>Update Donor Data</NavLink>
+                    <button
+                      onClick={handleLogout}
+                      disabled={loading}
+                      className="w-full text-left px-5 py-2 text-red-400 rounded-lg font-semibold hover:bg-gray-700 hover:text-red-300 transition-colors disabled:opacity-50 mt-1"
+                    >
+                      {loading ? "Logging out..." : "Logout"}
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
           </div>
