@@ -233,6 +233,85 @@ export default function Home() {
           </div>
         </motion.div>
       </section>
+  
+
+{/* Blood Group Information Section */}
+<section className="px-10 md:px-20 py-16 bg-gradient-to-b from-white to-red-50">
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.8 }}
+    viewport={{ once: true }}
+  >
+    <h2 className="text-4xl font-bold text-center mb-4">Blood Groups & Compatibility</h2>
+    <div className="w-24 h-1 bg-gradient-to-r from-red-500 to-pink-500 rounded-full mx-auto mb-12"></div>
+  </motion.div>
+  
+  <div className="grid md:grid-cols-4 gap-6">
+    {[
+      { group: "A+", canGiveTo: "A+, AB+", canReceiveFrom: "A+, A-, O+, O-" },
+      { group: "O+", canGiveTo: "O+, A+, B+, AB+", canReceiveFrom: "O+, O-" },
+      { group: "B+", canGiveTo: "B+, AB+", canReceiveFrom: "B+, B-, O+, O-" },
+      { group: "AB+", canGiveTo: "AB+", canReceiveFrom: "All Groups" },
+      { group: "A-", canGiveTo: "A+, A-, AB+, AB-", canReceiveFrom: "A-, O-" },
+      { group: "O-", canGiveTo: "All Groups", canReceiveFrom: "O-" },
+      { group: "B-", canGiveTo: "B+, B-, AB+, AB-", canReceiveFrom: "B-, O-" },
+      { group: "AB-", canGiveTo: "AB+, AB-", canReceiveFrom: "All Negative" },
+    ].map((blood) => (
+      <motion.div
+        key={blood.group}
+        whileHover={{ scale: 1.05 }}
+        className="p-6 rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300"
+      >
+        <div className="text-3xl font-bold text-red-600 mb-4">{blood.group}</div>
+        <div className="space-y-2">
+          <p className="text-sm text-gray-600">
+            <span className="font-semibold text-gray-700">Can Give To:</span>
+            <br />{blood.canGiveTo}
+          </p>
+          <p className="text-sm text-gray-600">
+            <span className="font-semibold text-gray-700">Can Receive From:</span>
+            <br />{blood.canReceiveFrom}
+          </p>
+        </div>
+      </motion.div>
+    ))}
+  </div>
+</section>
+
+{/* Donation Process Section */}
+<section className="px-10 md:px-20 py-16 bg-white">
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.8 }}
+    viewport={{ once: true }}
+  >
+    <h2 className="text-4xl font-bold text-center mb-4">Donation Process</h2>
+    <div className="w-24 h-1 bg-gradient-to-r from-red-500 to-pink-500 rounded-full mx-auto mb-12"></div>
+  </motion.div>
+
+  <div className="grid md:grid-cols-4 gap-8">
+    {[
+      { step: "1", title: "Registration", description: "Fill out the donor registration form with your details" },
+      { step: "2", title: "Screening", description: "Quick health check-up and hemoglobin test" },
+      { step: "3", title: "Donation", description: "Safe and quick blood donation process (takes only 10-15 minutes)" },
+      { step: "4", title: "Recovery", description: "Short rest and refreshments before heading home" },
+    ].map((process) => (
+      <motion.div
+        key={process.step}
+        whileHover={{ y: -10 }}
+        className="relative p-6 rounded-xl bg-gradient-to-br from-red-50 to-pink-50 shadow-lg"
+      >
+        <div className="absolute -top-4 -left-4 w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+          {process.step}
+        </div>
+        <h3 className="text-xl font-semibold mt-4 mb-2">{process.title}</h3>
+        <p className="text-gray-600">{process.description}</p>
+      </motion.div>
+    ))}
+  </div>
+</section>
 
       {/* Call to Action */}
       <section className="px-10 md:px-20 py-16 bg-gradient-to-b from-white to-red-50">
