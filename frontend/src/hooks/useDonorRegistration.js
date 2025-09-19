@@ -14,7 +14,7 @@ const useDonorRegistration = () => {
                 throw new Error("Please login first");
             }
 
-            const response = await fetch("http://localhost:1234/api/donors/register", {
+            const response = await fetch("https://blood-donor-management-system-v4qz.onrender.com/api/donors/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
