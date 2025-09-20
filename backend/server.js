@@ -44,5 +44,5 @@ app.use("/api/recipient", recipientRoutes);
 
 app.listen(PORT,()=>{
     connecttomongodb()
-    console.log(`server running in port ${PORT}`)
+    console.log(`server running in ${process.env.VITE_BACKEND_URL}`)
 });
