@@ -5,12 +5,17 @@ export const createDonorByAdmin = async (req, res) => {
             return res.status(403).json({ error: "Only admins can create donors this way" });
         }
         const donorData = req.body;
-        // userId can be set from body or null
+        // If userId is not provided, set a dummy ObjectId (or you can create a system user for admin-created donors)
+        if (!donorData.userId) {
+            // Use a fixed dummy ObjectId (24 hex chars) or create a system user and use its _id
+            donorData.userId = "000000000000000000000000";
+        }
         const newDonor = new Donor(donorData);
         await newDonor.save();
         res.status(201).json({ message: "Donor created by admin", donor: newDonor });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+        console.error("Error in createDonorByAdmin:", error);
+        res.status(500).json({ error: error.message || "Internal server error" });
     }
 };
 

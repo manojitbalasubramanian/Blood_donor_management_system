@@ -1,12 +1,21 @@
 import express from 'express';
-import { updateAdminStatus, getAllUsers } from '../controllers/admin.controller.js';
+import { updateAdminStatus, getAllUsers, createUserByAdmin, deleteUserByAdmin } from '../controllers/admin.controller.js';
 
 const router = express.Router();
 
 // GET /api/admin/all - get all users
 router.get('/all', getAllUsers);
 
-// PATCH /api/admin/:userId - update admin status
-router.patch('/:userId', updateAdminStatus);
+
+// POST /api/admin/create - admin creates a user
+router.post('/create', createUserByAdmin);
+
+
+// PATCH /api/admin/:userId - update admin status only
+router.patch('/:userId', updateAdminStatus); // keep for admin status
+
+
+// DELETE /api/admin/:userId - delete user
+router.delete('/:userId', deleteUserByAdmin);
 
 export default router;
