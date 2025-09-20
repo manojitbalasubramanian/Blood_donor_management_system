@@ -18,7 +18,7 @@ router.post('/request', protect, handleBloodRequest);
 router.get('/all', protect, getAllRecipients);
 router.get('/:id', protect, getRecipient);
 router.post('/create', protect, createRecipient);
-router.put('/:id', protect, updateRecipient);
+// router.put('/:id', protect, updateRecipient); // removed edit recipient
 router.delete('/:id', protect, deleteRecipient);
 
 export default router;

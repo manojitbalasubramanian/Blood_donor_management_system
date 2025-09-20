@@ -32,7 +32,7 @@ router.get("/bloodgroup/:bloodGroup", getDonorsByBloodGroup);
 router.patch("/availability/:donorId", updateDonorAvailability);
 
 // Update donor info (admin or owner)
-router.put("/:donorId", updateDonor);
+    // router.put("/:donorId", updateDonor); // removed edit donor
 
 // Delete donor (admin or owner)
 router.delete("/:donorId", deleteDonor);
