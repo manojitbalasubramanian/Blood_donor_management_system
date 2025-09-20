@@ -60,7 +60,7 @@ export default function DonorRegistration() {
     // Check if user already has a donor record
     const checkExistingDonor = async () => {
       try {
-        const res = await fetch('http://:1234/api/donors/all', {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donors/all`, {
           headers: { 'Authorization': `Bearer ${authUser.token}` }
         });
         const donors = await res.json();
