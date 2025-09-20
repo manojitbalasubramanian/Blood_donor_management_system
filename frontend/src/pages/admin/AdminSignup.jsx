@@ -40,7 +40,7 @@ const AdminSignup = () => {
     setLoading(true);
     setError('');
     try {
-      await axios.post(`http://localhost:1234/api/admin/create`, formData);
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/create`, formData);
       navigate('/admin/users');
     } catch (err) {
       setError(err.response?.data?.error || 'Signup failed');
