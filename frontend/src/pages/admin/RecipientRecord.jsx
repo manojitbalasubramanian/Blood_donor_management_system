@@ -43,7 +43,7 @@ const RecipientRecord = () => {
     setLoading(true);
     try {
       console.log('Fetching recipients...');
-      const response = await axios.get('http://localhost:1234/api/recipient/all', {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/recipient/all`, {
         headers: { Authorization: `Bearer ${authUser.token}` }
       });
       console.log('Response:', response.data);
@@ -64,11 +64,12 @@ const RecipientRecord = () => {
   const handleDelete = async (recipientId) => {
     if (!window.confirm('Are you sure you want to delete this recipient?')) return;
     try {
-      await axios.delete(`http://localhost:1234/api/recipient/${recipientId}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/recipient/${recipientId}`, {
         headers: { Authorization: `Bearer ${authUser.token}` }
       });
       fetchRecipients();
     } catch (error) {
+      console.error(error);
       alert('Delete failed');
     }
   };
@@ -104,12 +105,19 @@ const RecipientRecord = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:1234/api/recipient/create', formData, {
-        headers: { Authorization: `Bearer ${authUser.token}` }
-      });
+      if (modalType === 'edit') {
+        await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/recipient/${selectedRecipient._id}`, formData, {
+          headers: { Authorization: `Bearer ${authUser.token}` }
+        });
+      } else {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/recipient/create`, formData, {
+          headers: { Authorization: `Bearer ${authUser.token}` }
+        });
+      }
       setShowModal(false);
       fetchRecipients();
     } catch (error) {
+      console.error(error);
       alert('Operation failed');
     }
   };

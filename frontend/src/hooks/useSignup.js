@@ -11,7 +11,7 @@ const useSignup = () => {
 
 		setLoading(true);
 				try {
-						const res = await fetch("http://localhost:1234/auth/signup", {
+						const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/signup`, {
 								method: "POST",
 								headers: {
 										'Content-Type': 'application/json',
@@ -28,6 +28,7 @@ const useSignup = () => {
 			setAuthUser(data);
             toast.success("Signup successful");
 		} catch (error) {
+			console.error("Signup error:", error);
 			toast.error("An error occurred while signing up. Please try again.");
 		} finally {
 			setLoading(false);
