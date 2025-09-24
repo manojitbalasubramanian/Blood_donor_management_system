@@ -1,0 +1,17 @@
+# Exported from Render on 2025-09-24T04:38:02Z
+version: "1"
+services:
+- type: web
+  name: Blood-donor-management-system
+  runtime: static
+  repo: https://github.com/manojitbalasubramanian/Blood_donor_management_system
+  branch: host
+  envVars:
+  - key: VITE_FRONTEND_URL
+    sync: false
+  - key: VITE_BACKEND_URL
+    sync: false
+  buildCommand: npm run build
+  staticPublishPath: build
+  autoDeployTrigger: commit
+  rootDir: ./frontend
