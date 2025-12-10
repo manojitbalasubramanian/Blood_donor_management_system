@@ -28,7 +28,7 @@ function App() {
       <Navbar />
 
       {/* Page Content */}
-      <div className="flex-grow pt-24 pb-24">
+      <div className="flex-grow pt-16 pb-16">
         <Routes>
           {/* Removed edit user route */}
           <Route path="/" element={<Home />} />
