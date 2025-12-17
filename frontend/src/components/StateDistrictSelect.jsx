@@ -28,33 +28,49 @@ const StateDistrictSelect = ({ stateValue, districtValue, onStateChange, onDistr
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="block text-sm font-medium text-gray-700">State</label>
-      <select
-        name={stateName}
-        value={selectedState}
-        onChange={handleStateChange}
-        required={required}
-        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
-      >
-        <option value="">Select State</option>
-        {stateList.map((state) => (
-          <option key={state} value={state}>{state}</option>
-        ))}
-      </select>
-      <label className="block text-sm font-medium text-gray-700 mt-2">District/City</label>
-      <select
-        name={districtName}
-        value={selectedDistrict}
-        onChange={handleDistrictChange}
-        required={required}
-        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
-        disabled={!selectedState}
-      >
-        <option value="">{selectedState ? 'Select District/City' : 'Select State First'}</option>
-        {districtList.map((district) => (
-          <option key={district} value={district}>{district}</option>
-        ))}
-      </select>
+      <label className="block text-sm font-medium text-slate-200">State</label>
+
+      <div className="relative mt-1">
+        <select
+          name={stateName}
+          value={selectedState}
+          onChange={handleStateChange}
+          required={required}
+          className="appearance-none w-full bg-slate-800 text-white border border-slate-700 rounded-md py-2 px-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+        >
+          <option value="">Select State</option>
+          {stateList.map((state) => (
+            <option key={state} value={state}>{state}</option>
+          ))}
+        </select>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+          <svg className="h-4 w-4 text-slate-300" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+            <path d="M6 8l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+      </div>
+
+      <label className="block text-sm font-medium text-slate-200 mt-2">District/City</label>
+      <div className="relative mt-1">
+        <select
+          name={districtName}
+          value={selectedDistrict}
+          onChange={handleDistrictChange}
+          required={required}
+          className="appearance-none w-full bg-slate-800 text-white border border-slate-700 rounded-md py-2 px-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors disabled:opacity-60"
+          disabled={!selectedState}
+        >
+          <option value="">{selectedState ? 'Select District/City' : 'Select State First'}</option>
+          {districtList.map((district) => (
+            <option key={district} value={district}>{district}</option>
+          ))}
+        </select>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+          <svg className="h-4 w-4 text-slate-300" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+            <path d="M6 8l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+      </div>
     </div>
   );
 };

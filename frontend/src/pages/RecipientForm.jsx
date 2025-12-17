@@ -124,31 +124,31 @@ const RecipientForm = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
+        <div className="min-h-screen flex items-center justify-center bg-slate-950 p-6">
+            <div className="max-w-4xl mx-auto w-full">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
                     {/* Header Section */}
-                    <div className="text-center mb-12">
+                    <div className="text-center mb-8">
                         <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ duration: 0.5 }}
-                            className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-red-100 to-pink-100 rounded-full flex items-center justify-center shadow-lg"
+                            className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-red-100 to-pink-100 rounded-full flex items-center justify-center shadow-lg"
                         >
-                            <AlertCircle className="w-10 h-10 text-red-500" />
+                            <AlertCircle className="w-8 h-8 text-red-500" />
                         </motion.div>
-                        <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800 mb-4">
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-2">
                             Blood Request Form
                         </h2>
-                        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+                        <p className="text-slate-400 text-base max-w-2xl mx-auto">
                             Fill in your details to find matching blood donors in your area
                         </p>
                     </div>
-                    <div className="bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-sm bg-opacity-90">
+                    <div className="bg-slate-900 rounded-2xl p-8 border border-slate-800 shadow-xl">
                         {error && (
                             <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 flex items-center">
                                 <AlertCircle className="mr-2" />
@@ -160,46 +160,40 @@ const RecipientForm = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Name */}
                                 <div className="relative">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Full Name
-                                    </label>
+                                    <label className="block text-sm font-medium text-slate-200 mb-2">Full Name</label>
                                     <input
                                         type="text"
                                         name="name"
                                         required
                                         value={formData.name}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 bg-white bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200"
+                                        className="mt-1 block w-full rounded-md bg-slate-800 border border-slate-700 py-2 px-3 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition-colors"
                                         placeholder="Enter your full name"
                                     />
                                 </div>
 
                                 {/* Age */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Age
-                                    </label>
+                                    <label className="block text-sm font-medium text-slate-200">Age</label>
                                     <input
                                         type="number"
                                         name="age"
                                         required
                                         value={formData.age}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                                        className="mt-1 block w-full rounded-md bg-slate-800 border border-slate-700 py-2 px-3 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                                     />
                                 </div>
 
                                 {/* Gender */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Gender
-                                    </label>
+                                    <label className="block text-sm font-medium text-slate-200">Gender</label>
                                     <select
                                         name="gender"
                                         required
                                         value={formData.gender}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                                        className="mt-1 block w-full rounded-md bg-slate-800 border border-slate-700 py-2 px-3 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                                     >
                                         <option value="">Select Gender</option>
                                         <option value="Male">Male</option>
@@ -210,15 +204,13 @@ const RecipientForm = () => {
 
                                 {/* Blood Group */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Blood Group Required
-                                    </label>
+                                    <label className="block text-sm font-medium text-slate-200">Blood Group Required</label>
                                     <select
                                         name="bloodGroup"
                                         required
                                         value={formData.bloodGroup}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                                        className="mt-1 block w-full rounded-md bg-slate-800 border border-slate-700 py-2 px-3 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                                     >
                                         <option value="">Select Blood Group</option>
                                         <option value="A+">A+</option>
@@ -234,31 +226,27 @@ const RecipientForm = () => {
 
                                 {/* Contact Number */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Contact Number
-                                    </label>
+                                    <label className="block text-sm font-medium text-slate-200">Contact Number</label>
                                     <input
                                         type="tel"
                                         name="contactNumber"
                                         required
                                         value={formData.contactNumber}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                                        className="mt-1 block w-full rounded-md bg-slate-800 border border-slate-700 py-2 px-3 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                                     />
                                 </div>
 
                                 {/* Hospital */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Hospital Name
-                                    </label>
+                                    <label className="block text-sm font-medium text-slate-200">Hospital Name</label>
                                     <input
                                         type="text"
                                         name="hospital"
                                         required
                                         value={formData.hospital}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                                        className="mt-1 block w-full rounded-md bg-slate-800 border border-slate-700 py-2 px-3 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                                     />
                                 </div>
 
@@ -277,9 +265,7 @@ const RecipientForm = () => {
 
                                 {/* Units Needed */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Units of Blood Needed
-                                    </label>
+                                    <label className="block text-sm font-medium text-slate-200">Units of Blood Needed</label>
                                     <input
                                         type="number"
                                         name="unitsNeeded"
@@ -287,21 +273,19 @@ const RecipientForm = () => {
                                         min="1"
                                         value={formData.unitsNeeded}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                                        className="mt-1 block w-full rounded-md bg-slate-800 border border-slate-700 py-2 px-3 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                                     />
                                 </div>
 
                                 {/* Urgency */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Urgency Level
-                                    </label>
+                                    <label className="block text-sm font-medium text-slate-200">Urgency Level</label>
                                     <select
                                         name="urgency"
                                         required
                                         value={formData.urgency}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                                        className="mt-1 block w-full rounded-md bg-slate-800 border border-slate-700 py-2 px-3 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                                     >
                                         <option value="">Select Urgency</option>
                                         <option value="Immediate">Immediate</option>
@@ -313,16 +297,14 @@ const RecipientForm = () => {
 
                             {/* Reason */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">
-                                    Reason for Blood Requirement
-                                </label>
+                                <label className="block text-sm font-medium text-slate-200">Reason for Blood Requirement</label>
                                 <textarea
                                     name="reason"
                                     required
                                     rows="3"
                                     value={formData.reason}
                                     onChange={handleChange}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                                    className="mt-1 block w-full rounded-md bg-slate-800 border border-slate-700 py-2 px-3 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                                 />
                             </div>
 
@@ -333,7 +315,7 @@ const RecipientForm = () => {
                                     whileTap={{ scale: 0.98 }}
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full md:w-2/3 bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transform transition-all duration-300 disabled:opacity-50 shadow-xl hover:shadow-2xl flex items-center justify-center gap-2"
+                                    className="w-full md:w-2/3 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-md font-semibold text-base focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-0 transform transition-all duration-150 disabled:opacity-50 shadow flex items-center justify-center gap-2"
                                 >
                                     {loading ? (
                                         <>
@@ -368,60 +350,35 @@ const RecipientForm = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.2 }}
-                            className="mt-12 bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-sm bg-opacity-90"
+                            className="mt-12 bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-xl"
                         >
                             <div className="text-center mb-8">
-                                <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800 mb-3">
-                                    Available Matching Donors
-                                </h3>
+                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">Available Matching Donors</h3>
                                 <div className="w-20 h-1 bg-gradient-to-r from-red-500 to-pink-500 mx-auto rounded-full"></div>
                             </div>
-                            
                             {matchingDonors.length === 0 ? (
-                                <motion.div
-                                    initial={{ scale: 0.9 }}
-                                    animate={{ scale: 1 }}
-                                    className="text-center py-8"
-                                >
+                                <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-center py-8">
                                     <div className="w-16 h-16 mx-auto mb-4 bg-red-50 rounded-full flex items-center justify-center">
                                         <AlertCircle className="w-8 h-8 text-red-500" />
                                     </div>
-                                    <p className="text-gray-600 text-lg">
-                                        No matching donors found in your city.
-                                    </p>
-                                    <p className="text-gray-500 mt-2">
-                                        We'll notify you when a donor becomes available.
-                                    </p>
+                                    <p className="text-slate-400 text-lg">No matching donors found in your city.</p>
+                                    <p className="text-slate-500 mt-2">We'll notify you when a donor becomes available.</p>
                                 </motion.div>
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {matchingDonors.map((donor, index) => (
-                                        <motion.div
-                                            key={index}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: index * 0.1 }}
-                                            className="bg-gradient-to-br from-white to-red-50 border border-red-100 rounded-xl p-6 hover:shadow-xl transition-all duration-300 group"
-                                        >
+                                        <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="bg-slate-800 border border-slate-700 rounded-xl p-6 hover:shadow-xl transition-all duration-300 group">
                                             <div className="flex items-start justify-between">
-                                                <h4 className="font-semibold text-xl text-gray-900 group-hover:text-red-600 transition-colors">
-                                                    {donor.name}
-                                                </h4>
-                                                <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-                                                    {donor.bloodGroup}
-                                                </span>
+                                                <h4 className="font-semibold text-xl text-white group-hover:text-red-400 transition-colors">{donor.name}</h4>
+                                                <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">{donor.bloodGroup}</span>
                                             </div>
-                                            <div className="mt-4 space-y-2 text-gray-600">
+                                            <div className="mt-4 space-y-2 text-slate-400">
                                                 <p className="flex items-center gap-2">
-                                                    <span className="w-4 h-4 rounded-full bg-red-100 flex items-center justify-center">
-                                                        📍
-                                                    </span>
+                                                    <span className="w-4 h-4 rounded-full bg-red-100 flex items-center justify-center">📍</span>
                                                     {donor.city}
                                                 </p>
                                                 <p className="flex items-center gap-2">
-                                                    <span className="w-4 h-4 rounded-full bg-red-100 flex items-center justify-center">
-                                                        📞
-                                                    </span>
+                                                    <span className="w-4 h-4 rounded-full bg-red-100 flex items-center justify-center">📞</span>
                                                     {donor.contactNumber}
                                                 </p>
                                             </div>
