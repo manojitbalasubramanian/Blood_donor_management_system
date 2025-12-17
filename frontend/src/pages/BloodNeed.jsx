@@ -27,7 +27,7 @@ const BloodNeed = () => {
   useEffect(() => {
     const fetchRecipientAndSetFilters = async () => {
       try {
-        const response = await fetch('http://localhost:1234/api/recipient/all', {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/recipient/all`, {
           headers: { 'Authorization': `Bearer ${authUser.token}` }
         });
         if (!response.ok) throw new Error('Failed to fetch recipient data');
@@ -59,7 +59,7 @@ const BloodNeed = () => {
 
   const fetchDonors = async () => {
     try {
-      const response = await fetch("http://localhost:1234/api/donors/all", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donors/all`, {
         headers: {
           "Authorization": `Bearer ${authUser.token}`
         }

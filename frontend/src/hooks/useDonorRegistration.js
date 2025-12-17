@@ -6,15 +6,23 @@ const useDonorRegistration = () => {
     const [loading, setLoading] = useState(false);
     const { authUser } = useAuthContext();
 
-    const registerDonor = async (donorData) => {
+
+    /**
+     * Register a donor. If admin is true, use the admin endpoint.
+     * @param {object} donorData - Donor data
+     * @param {boolean} admin - If true, use /api/donors/create
+     */
+    const registerDonor = async (donorData, admin = false) => {
         setLoading(true);
         try {
-            // Check if user is logged in and has a valid token
             if (!authUser || !authUser.token) {
                 throw new Error("Please login first");
             }
 
-            const response = await fetch("http://localhost:1234/api/donors/register", {
+            const url = admin
+                ? `${import.meta.env.VITE_BACKEND_URL}/api/donors/create`
+                : `${import.meta.env.VITE_BACKEND_URL}/api/donors/register`;
+            const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -22,16 +30,12 @@ const useDonorRegistration = () => {
                 },
                 body: JSON.stringify(donorData)
             });
-
             const data = await response.json();
-            
             if (data.error) {
                 throw new Error(data.error);
             }
-
             toast.success("Donor registration successful!");
             return data;
-
         } catch (error) {
             toast.error(error.message);
             return null;

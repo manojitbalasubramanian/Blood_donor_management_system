@@ -55,7 +55,7 @@ function Navbar() {
   };
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
       scrolled
         ? 'bg-gradient-to-r from-gray-900 to-gray-800 shadow-lg'
         : 'bg-gradient-to-r from-gray-800 to-gray-700'

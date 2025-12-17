@@ -18,8 +18,14 @@ const PORT = process.env.PORT || 1234;
 import cors from 'cors';
 
 // CORS configuration
+
+
+const allowedOrigins = [];
+if (process.env.VITE_BACKEND_URL) allowedOrigins.push(process.env.VITE_BACKEND_URL);
+if (process.env.VITE_FRONTEND_URL) allowedOrigins.push(process.env.VITE_FRONTEND_URL);
+
 const corsOptions = {
-    origin: ["http://localhost:5678", "http://localhost:5173"],
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -38,5 +44,5 @@ app.use("/api/recipient", recipientRoutes);
 
 app.listen(PORT,()=>{
     connecttomongodb()
-    console.log(`server running in port ${PORT}`)
+    console.log(`server running in ${process.env.VITE_BACKEND_URL}`)
 });

@@ -39,7 +39,7 @@ const BloodNeed = () => {
 
   const fetchDonors = async () => {
     try {
-      const response = await fetch("http://localhost:1234/api/donors/all", {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donors/all`, {
         headers: {
           "Authorization": `Bearer ${authUser.token}`
         }

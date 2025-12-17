@@ -104,7 +104,7 @@ const donorSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: false // allow admin to create donors without a user
     },
     hasHealthIssues: {
         type: Boolean,

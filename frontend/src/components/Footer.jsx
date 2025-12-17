@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-900 via-red-900 to-blue-900 text-white py-4 z-40">
+    <footer className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-900 via-red-900 to-blue-900 text-white py-4 ">
       {/* Animated border top */}
       <div className="absolute top-0 left-0 right-0 h-[1px]">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-400 to-transparent animate-shimmer"></div>

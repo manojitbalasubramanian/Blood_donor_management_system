@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useLogin from "../hooks/useLogin";
 import useAuthContext from "../context/useAuthContext";
@@ -23,60 +23,64 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700">
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md bg-gray-900 text-white px-10 py-12 rounded-2xl shadow-2xl border border-gray-700 flex flex-col items-center"
+        className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-lg shadow-xl p-8 space-y-6"
       >
-        <h1 className="text-4xl font-extrabold text-center text-red-500 mb-8">
-          Login
-          <div className="w-20 h-1 bg-gradient-to-r from-red-500 to-pink-500 mx-auto mt-2 rounded-full"></div>
-        </h1>
-
-        {/* Username */}
-        <div className="w-full flex flex-col items-center">
-          <label className="text-sm font-medium text-gray-300 mb-1 text-center">
-            Username
-          </label>
-          <input
-            type="text"
-            placeholder="Enter Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-3/4 px-4 py-3 rounded-xl bg-gray-800 placeholder-gray-500 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
+        <div className="space-y-2 text-center">
+          <h1 className="text-2xl font-bold text-white">Welcome back</h1>
+          <p className="text-sm text-slate-400">Sign in to your account</p>
         </div>
 
-        <div className="my-4"></div>
-        
-        <div className="w-full flex flex-col items-center">
-          <label className="text-sm font-medium text-gray-300 mb-1 text-center">
-            Password
-          </label>
-          <input
-            type="password"
-            placeholder="Enter Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-3/4 px-4 py-3 rounded-xl bg-gray-800 placeholder-gray-500 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
-        </div>
+        <div className="space-y-4">
+          {/* Username */}
+          <div className="space-y-2">
+            <label htmlFor="username" className="text-sm font-medium text-slate-200 block">
+              Username
+            </label>
+            <input
+              id="username"
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition-colors"
+            />
+          </div>
 
-        {/* Signup link */}
-        <Link
-          to="/signup"
-          className="text-sm text-red-400 hover:text-red-300 text-center block mt-4"
-        >
-          Don’t have an account? Signup
-        </Link>
+          {/* Password */}
+          <div className="space-y-2">
+            <label htmlFor="password" className="text-sm font-medium text-slate-200 block">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition-colors"
+            />
+          </div>
+        </div>
 
         {/* Login button */}
         <button
+          type="submit"
           disabled={loading}
-          className="w-3/4 mt-6 py-3 rounded-xl bg-gradient-to-r from-red-600 to-pink-600 text-white font-bold shadow-md hover:scale-105 disabled:opacity-50 transition-all duration-300"
+          className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-600 disabled:opacity-50 text-white font-medium py-2 px-4 rounded-md text-sm transition-colors"
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? "Signing in..." : "Sign in"}
         </button>
+
+        {/* Signup link */}
+        <p className="text-center text-sm text-slate-400">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-red-500 hover:text-red-400 font-medium transition-colors">
+            Sign up
+          </Link>
+        </p>
       </form>
     </div>
   );

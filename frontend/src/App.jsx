@@ -10,10 +10,12 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import useAuthContext from "./context/useAuthContext";
 import DonorRegistration from "./pages/DonorRegistration";
+import AdminDonorRegistration from "./pages/admin/AdminDonorRegistration";
 import AdminPage from "./pages/admin/AdminPage";
 import DonorRecord from "./pages/admin/DonorRecord";
 import UserRecord from "./pages/admin/UserRecord";
 import RecipientRecord from "./pages/admin/RecipientRecord";
+import AdminSignup from "./pages/admin/AdminSignup";
 import Profile from "./pages/Profile";
 import UpdateDonorData from "./pages/UpdateDonorData";
 
@@ -26,8 +28,9 @@ function App() {
       <Navbar />
 
       {/* Page Content */}
-  <div className="flex-grow pt-24 pb-24">
+      <div className="flex-grow pt-16 pb-16">
         <Routes>
+          {/* Removed edit user route */}
           <Route path="/" element={<Home />} />
           <Route
             path="/login"
@@ -38,9 +41,13 @@ function App() {
             element={authUser ? <Navigate to="/" /> : <Signup />}
           />
           <Route path="/donor" element={<DonorCard />} />
-          <Route
+           <Route
             path="/donor-registration"
             element={authUser ? <DonorRegistration /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/admin/donor-registration"
+            element={authUser && authUser.admin ? <AdminDonorRegistration /> : <Navigate to="/login" />}
           />
           <Route
             path="/recipient-form"
@@ -65,6 +72,10 @@ function App() {
           <Route
             path="/admin/recipients"
             element={authUser && authUser.admin ? <RecipientRecord /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/admin/signup"
+            element={authUser && authUser.admin ? <AdminSignup /> : <Navigate to="/login" />}
           />
           <Route
             path="/update-profile"

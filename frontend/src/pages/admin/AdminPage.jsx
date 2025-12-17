@@ -23,13 +23,13 @@ const AdminPage = () => {
           'Content-Type': 'application/json'
         };
         // Fetch donors
-        const donorRes = await fetch("http://localhost:1234/api/donors/all", { headers });
+        const donorRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donors/all`, { headers });
         const donors = await donorRes.json();
         // Fetch users
-        const userRes = await fetch("http://localhost:1234/api/admin/all", { headers });
+        const userRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/admin/all`, { headers });
         const users = await userRes.json();
         // Fetch recipients (for recent donations)
-        const recRes = await fetch("http://localhost:1234/api/recipient/all", { headers });
+        const recRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/recipient/all`, { headers });
         const recipients = await recRes.json();
 
         setStats({
@@ -148,6 +148,7 @@ const AdminPage = () => {
         </motion.div>
 
         {/* Main Actions */}
+        {/* Main Actions: Only show Donor, Recipient, and User Records (no create actions) */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -166,7 +167,7 @@ const AdminPage = () => {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">Donor Records</h3>
               <p className="text-gray-600 mb-6">
-                Manage and view all blood donor information, track donations, and update records.
+                View and manage all blood donor information.
               </p>
               <div className="flex items-center text-red-600 font-medium">
                 View Donors
@@ -187,7 +188,7 @@ const AdminPage = () => {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">Recipient Records</h3>
               <p className="text-gray-600 mb-6">
-                Manage blood requests, track recipient information, and monitor request status.
+                View and manage blood requests and recipient information.
               </p>
               <div className="flex items-center text-purple-600 font-medium">
                 View Recipients

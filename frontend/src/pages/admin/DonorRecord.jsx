@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +31,7 @@ const DonorRecord = () => {
   const fetchDonors = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:1234/api/donors/all', {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/donors/all`, {
         headers: { Authorization: `Bearer ${authUser.token}` }
       });
       setDonors(response.data);
@@ -51,12 +52,14 @@ const DonorRecord = () => {
   const handleDelete = async (donorId) => {
     if (!window.confirm('Are you sure you want to delete this donor?')) return;
     try {
-      await axios.delete(`http://localhost:1234/api/donors/${donorId}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/donors/${donorId}`, {
         headers: { Authorization: `Bearer ${authUser.token}` }
       });
       fetchDonors();
     } catch (error) {
+      console.error(error);
       alert('Delete failed');
+    toast.error('Delete failed');
     }
   };
 
@@ -76,18 +79,20 @@ const DonorRecord = () => {
     e.preventDefault();
     try {
       if (modalType === 'edit') {
-        await axios.put(`http://localhost:1234/api/donors/${selectedDonor._id}`, formData, {
+        await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/donors/${selectedDonor._id}`, formData, {
           headers: { Authorization: `Bearer ${authUser.token}` }
         });
       } else {
-        await axios.post('http://localhost:1234/api/donors/create', formData, {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/donors/create`, formData, {
           headers: { Authorization: `Bearer ${authUser.token}` }
         });
       }
       setShowModal(false);
       fetchDonors();
     } catch (error) {
+      console.error(error);
       alert('Operation failed');
+    toast.error('Operation failed');
     }
   };
 
@@ -116,7 +121,7 @@ const DonorRecord = () => {
   return (
     <div className="p-8">
       <h2 className="text-2xl font-bold mb-6 text-red-600">Donor Records</h2>
-      <button className="mb-4 px-4 py-2 bg-green-500 text-white rounded" onClick={handleCreate}>Create Donor</button>
+      <div className="flex gap-4 mb-4"></div>
       {/* Filters */}
       <div className="bg-white p-4 rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-5 gap-4">
         <div>
@@ -239,7 +244,7 @@ const DonorRecord = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.createdAt ? new Date(donor.createdAt).toLocaleString() : '-'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donor.updatedAt ? new Date(donor.updatedAt).toLocaleString() : '-'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <button className="px-2 py-1 bg-blue-500 text-white rounded text-xs mr-2" onClick={() => handleEdit(donor)}>Edit</button>
+                    {/* Edit button removed */}
                     <button className="px-2 py-1 bg-red-500 text-white rounded text-xs" onClick={() => handleDelete(donor._id)}>Delete</button>
                   </td>
                 </tr>
@@ -252,64 +257,7 @@ const DonorRecord = () => {
         </div>
       </div>
 
-      {/* Modal for Create/Edit */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-            <h3 className="text-xl font-bold mb-4">{modalType === 'edit' ? 'Edit Donor' : 'Create Donor'}</h3>
-            <form onSubmit={handleFormSubmit} className="grid grid-cols-2 gap-4">
-              <input type="text" name="fullName" value={formData.fullName} onChange={handleFormChange} placeholder="Full Name" className="col-span-2 p-2 border rounded" required />
-              <input type="text" name="bloodGroup" value={formData.bloodGroup} onChange={handleFormChange} placeholder="Blood Group" className="p-2 border rounded" required />
-              <input type="number" name="age" value={formData.age} onChange={handleFormChange} placeholder="Age" className="p-2 border rounded" />
-              <input type="text" name="gender" value={formData.gender} onChange={handleFormChange} placeholder="Gender" className="p-2 border rounded" />
-              <input type="number" name="height" value={formData.height} onChange={handleFormChange} placeholder="Height" className="p-2 border rounded" />
-              <input type="number" name="weight" value={formData.weight} onChange={handleFormChange} placeholder="Weight" className="p-2 border rounded" />
-              <input type="text" name="city" value={formData.city} onChange={handleFormChange} placeholder="City" className="p-2 border rounded" />
-              <input type="text" name="state" value={formData.state} onChange={handleFormChange} placeholder="State" className="p-2 border rounded" />
-              <input type="text" name="country" value={formData.country} onChange={handleFormChange} placeholder="Country" className="p-2 border rounded" />
-              <input type="text" name="phone" value={formData.phone} onChange={handleFormChange} placeholder="Phone" className="p-2 border rounded" />
-              <input type="email" name="email" value={formData.email} onChange={handleFormChange} placeholder="Email" className="p-2 border rounded" />
-              <input type="text" name="address" value={formData.address} onChange={handleFormChange} placeholder="Address" className="col-span-2 p-2 border rounded" />
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Has Health Issues?</label>
-                <select
-                  name="hasHealthIssues"
-                  value={formData.hasHealthIssues}
-                  onChange={(e) => handleFormChange({
-                    target: {
-                      name: 'hasHealthIssues',
-                      value: e.target.value === 'true'
-                    }
-                  })}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value={false}>No</option>
-                  <option value={true}>Yes</option>
-                </select>
-              </div>
-              {formData.hasHealthIssues && (
-                <textarea
-                  name="healthIssues"
-                  value={formData.healthIssues}
-                  onChange={handleFormChange}
-                  placeholder="Describe health issues"
-                  className="col-span-2 p-2 border rounded min-h-[80px]"
-                />
-              )}
-              <input type="date" name="lastDonation" value={formData.lastDonation ? formData.lastDonation.substring(0,10) : ''} onChange={handleFormChange} placeholder="Last Donation" className="p-2 border rounded" />
-              <label className="col-span-2 flex items-center gap-2">
-                <input type="checkbox" name="availability" checked={formData.availability} onChange={handleFormChange} /> Available
-              </label>
-              <input type="text" name="userId" value={formData.userId} onChange={handleFormChange} placeholder="User ID" className="p-2 border rounded" />
-              <input type="password" name="password" value={formData.password} onChange={handleFormChange} placeholder="Password" className="col-span-2 p-2 border rounded" required />
-              <div className="col-span-2 flex justify-end gap-2 mt-4">
-                <button type="button" className="px-4 py-2 bg-gray-400 text-white rounded" onClick={() => setShowModal(false)}>Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">{modalType === 'edit' ? 'Update' : 'Create'}</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 };
