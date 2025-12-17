@@ -61,7 +61,7 @@ const RecipientForm = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:1234/api/recipient/request', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/recipient/request`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

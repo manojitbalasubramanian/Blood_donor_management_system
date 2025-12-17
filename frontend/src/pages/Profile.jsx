@@ -31,14 +31,14 @@ const Profile = () => {
     // Fetch user data
     const fetchData = async () => {
       try {
-        const userRes = await fetch('http://localhost:1234/api/admin/all', {
+        const userRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/admin/all`, {
           headers: { 'Authorization': `Bearer ${authUser.token}` }
         });
         const users = await userRes.json();
         const user = users.find(u => u._id === authUser._id);
         setUserData(user);
         // Fetch donor data
-        const donorRes = await fetch('http://localhost:1234/api/donors/all', {
+        const donorRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donors/all`, {
           headers: { 'Authorization': `Bearer ${authUser.token}` }
         });
         const donors = await donorRes.json();
@@ -71,7 +71,7 @@ const Profile = () => {
     setSaving(true);
     try {
       // Update user data via new endpoint
-      const userRes = await fetch(`http://localhost:1234/auth/profile`, {
+      const userRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ const Profile = () => {
       }
       // Update donor data if exists
       if (donorData && donorData._id) {
-        const donorRes = await fetch(`http://localhost:1234/api/donors/${donorData._id}`, {
+        const donorRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donors/${donorData._id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

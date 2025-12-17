@@ -30,7 +30,7 @@ const UpdateDonorData = () => {
     // Fetch donor data
     const fetchData = async () => {
       try {
-        const donorRes = await fetch('http://localhost:1234/api/donors/all', {
+        const donorRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donors/all`, {
           headers: { 'Authorization': `Bearer ${authUser.token}` }
         });
         const donors = await donorRes.json();
@@ -60,7 +60,7 @@ const UpdateDonorData = () => {
     setSaving(true);
     try {
       if (donorData && donorData._id) {
-        const donorRes = await fetch(`http://localhost:1234/api/donors/${donorData._id}`, {
+        const donorRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donors/${donorData._id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

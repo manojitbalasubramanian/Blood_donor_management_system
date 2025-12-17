@@ -18,9 +18,10 @@ const useDonorRegistration = () => {
             if (!authUser || !authUser.token) {
                 throw new Error("Please login first");
             }
+
             const url = admin
-                ? "http://localhost:1234/api/donors/create"
-                : "http://localhost:1234/api/donors/register";
+                ? `${import.meta.env.VITE_BACKEND_URL}/api/donors/create`
+                : `${import.meta.env.VITE_BACKEND_URL}/api/donors/register`;
             const response = await fetch(url, {
                 method: "POST",
                 headers: {

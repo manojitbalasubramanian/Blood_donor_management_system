@@ -31,7 +31,7 @@ const DonorRecord = () => {
   const fetchDonors = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:1234/api/donors/all', {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/donors/all`, {
         headers: { Authorization: `Bearer ${authUser.token}` }
       });
       setDonors(response.data);
@@ -52,11 +52,12 @@ const DonorRecord = () => {
   const handleDelete = async (donorId) => {
     if (!window.confirm('Are you sure you want to delete this donor?')) return;
     try {
-      await axios.delete(`http://localhost:1234/api/donors/${donorId}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/donors/${donorId}`, {
         headers: { Authorization: `Bearer ${authUser.token}` }
       });
       fetchDonors();
     } catch (error) {
+      console.error(error);
       alert('Delete failed');
     toast.error('Delete failed');
     }
@@ -78,17 +79,18 @@ const DonorRecord = () => {
     e.preventDefault();
     try {
       if (modalType === 'edit') {
-        await axios.put(`http://localhost:1234/api/donors/${selectedDonor._id}`, formData, {
+        await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/donors/${selectedDonor._id}`, formData, {
           headers: { Authorization: `Bearer ${authUser.token}` }
         });
       } else {
-        await axios.post('http://localhost:1234/api/donors/create', formData, {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/donors/create`, formData, {
           headers: { Authorization: `Bearer ${authUser.token}` }
         });
       }
       setShowModal(false);
       fetchDonors();
     } catch (error) {
+      console.error(error);
       alert('Operation failed');
     toast.error('Operation failed');
     }
